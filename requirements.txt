@@ -1,0 +1,7 @@
+langgraph
+neo4j
+openai
+pydantic
+pydantic-ai
+sentence-transformers
+psycopg[binary]

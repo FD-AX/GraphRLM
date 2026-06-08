@@ -1,0 +1,40 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Logs and runtime output
+*.log
+logs/
+runtime/logs/
+
+# Generated benchmark outputs
+artifacts/*
+!artifacts/.gitkeep
+
+# Python caches and test artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local model/cache artifacts
+hf-cache/
+.cache/
+
+# Local manuscripts / source documents
+*.docx
+!034. Подъём в преисподнюю (ред)(ред).docx
+*.pdf
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

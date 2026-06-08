@@ -1,0 +1,176 @@
+{
+  "title": "JMLC - Benchmark Research",
+  "uid": "jmlc-benchmark-research",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "tags": ["jmlc", "benchmarks"],
+  "timezone": "browser",
+  "templating": {
+    "list": [
+      {
+        "name": "experiment_id",
+        "type": "query",
+        "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+        "query": "SELECT DISTINCT experiment_id FROM benchmark_metrics.benchmark_runs ORDER BY 1",
+        "refresh": 1,
+        "multi": true,
+        "includeAll": true
+      },
+      {
+        "name": "arm_name",
+        "type": "query",
+        "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+        "query": "SELECT DISTINCT arm_name FROM benchmark_metrics.benchmark_runs ORDER BY 1",
+        "refresh": 1,
+        "multi": true,
+        "includeAll": true
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Active score by arm",
+      "type": "barchart",
+      "gridPos": { "x": 0, "y": 0, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+          "format": "table",
+          "rawSql": "SELECT arm_name, avg(mean_score) AS mean_score FROM benchmark_metrics.v_arm_summary WHERE ('$experiment_id' = 'All' OR experiment_id IN ($experiment_id)) GROUP BY arm_name ORDER BY arm_name"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Total tokens by arm",
+      "type": "barchart",
+      "gridPos": { "x": 8, "y": 0, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+          "format": "table",
+          "rawSql": "SELECT arm_name, sum(total_tokens) AS total_tokens FROM benchmark_metrics.v_arm_summary WHERE ('$experiment_id' = 'All' OR experiment_id IN ($experiment_id)) GROUP BY arm_name ORDER BY arm_name"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Context amplification",
+      "type": "barchart",
+      "gridPos": { "x": 16, "y": 0, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+          "format": "table",
+          "rawSql": "SELECT arm_name, avg(mean_context_amplification) AS mean_context_amplification FROM benchmark_metrics.v_arm_summary WHERE ('$experiment_id' = 'All' OR experiment_id IN ($experiment_id)) GROUP BY arm_name ORDER BY arm_name"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Root vs worker tokens",
+      "type": "table",
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+          "format": "table",
+          "rawSql": "SELECT arm_name, model_role, model_name, sum(calls) AS calls, sum(total_tokens) AS total_tokens, avg(mean_latency_ms) AS mean_latency_ms FROM benchmark_metrics.v_model_role_summary WHERE ('$experiment_id' = 'All' OR experiment_id IN ($experiment_id)) GROUP BY arm_name, model_role, model_name ORDER BY arm_name, model_role"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Runs table",
+      "type": "table",
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+          "format": "table",
+          "rawSql": "SELECT task_id, arm_name, execution_path_status, original_score, active_score, total_tokens, root_tokens, worker_tokens, artifact_valid, artifact_path FROM benchmark_metrics.benchmark_runs WHERE ('$experiment_id' = 'All' OR experiment_id IN ($experiment_id)) AND ('$arm_name' = 'All' OR arm_name IN ($arm_name)) ORDER BY created_at DESC"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Execution mode summary",
+      "type": "barchart",
+      "gridPos": { "x": 0, "y": 16, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+          "format": "table",
+          "rawSql": "SELECT query_semantics, execution_mode, sum(runs_total) AS runs_total, sum(score_sum) AS score_sum, sum(total_tokens) AS total_tokens, sum(graph_query_runs) AS graph_query_runs, sum(graph_contributed_runs) AS graph_contributed_runs, sum(graph_useful_runs) AS graph_useful_runs, sum(graph_insufficient_runs) AS graph_insufficient_runs FROM benchmark_metrics.v_execution_mode_summary WHERE ('$experiment_id' = 'All' OR experiment_id IN ($experiment_id)) GROUP BY query_semantics, execution_mode ORDER BY query_semantics, execution_mode"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Cold vs warm graph cost",
+      "type": "barchart",
+      "gridPos": { "x": 12, "y": 16, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+          "format": "table",
+          "rawSql": "SELECT query_semantics, execution_mode, sum(cold_total_tokens) AS cold_total_tokens, sum(warm_query_tokens) AS warm_query_tokens FROM benchmark_metrics.v_graph_forensic_summary WHERE ('$experiment_id' = 'All' OR experiment_id IN ($experiment_id)) GROUP BY query_semantics, execution_mode ORDER BY query_semantics, execution_mode"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Graph forensic runs",
+      "type": "table",
+      "gridPos": { "x": 0, "y": 24, "w": 24, "h": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+          "format": "table",
+          "rawSql": "SELECT r.task_id, r.arm_name, f.query_semantics, f.execution_mode, f.graph_query_executed, f.uses_local_projection_list, f.graph_contributed, f.graph_contribution_outcome, f.graph_contribution_reasons, f.required_path_found, f.required_entities_found, f.required_evidence_set_complete, f.answer_derived_from_graph_path, f.graph_rows_returned, f.matched_node_count, f.matched_edge_count, f.evidence_id_count, f.semantic_documents_per_source_record, f.prompted_documents_per_unique_source_record, f.cold_total_tokens, f.warm_query_tokens FROM benchmark_metrics.benchmark_runs r JOIN benchmark_metrics.benchmark_graph_forensics f ON f.run_id = r.run_id WHERE ('$experiment_id' = 'All' OR r.experiment_id IN ($experiment_id)) AND ('$arm_name' = 'All' OR r.arm_name IN ($arm_name)) ORDER BY r.task_id, r.arm_name"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Graph query run details",
+      "type": "table",
+      "gridPos": { "x": 0, "y": 32, "w": 24, "h": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+          "format": "table",
+          "rawSql": "SELECT r.task_id, r.task_name, r.prediction, r.gold_answer, r.active_score, r.total_tokens, f.query_semantics, f.graph_query_reason, f.graph_query_dsl, f.path_length, f.matched_node_count, f.matched_edge_count, f.evidence_id_count, f.graph_contributed, f.graph_contribution_outcome, f.graph_contribution_reasons, f.required_path_found, f.required_entities_found, f.required_evidence_set_complete, f.answer_derived_from_graph_path FROM benchmark_metrics.benchmark_runs r JOIN benchmark_metrics.benchmark_graph_forensics f ON f.run_id = r.run_id WHERE f.execution_mode = 'graph_query_ops' AND ('$experiment_id' = 'All' OR r.experiment_id IN ($experiment_id)) ORDER BY r.task_id, r.arm_name"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "FactLens audit summary",
+      "type": "table",
+      "gridPos": { "x": 0, "y": 40, "w": 24, "h": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+          "format": "table",
+          "rawSql": "SELECT experiment_id, mode, runs_total, final_verdict_accuracy, complete_evidence_coverage_rate, subclaim_recall, unsupported_verdict_rate, total_tokens, fully_verified_claims_per_10k_tokens, shared_graph_facts, cross_subclaim_edges, shared_evidence_reuse, graph_contributed_runs, graph_useful_runs FROM benchmark_metrics.v_factlens_audit_summary WHERE ('$experiment_id' = 'All' OR experiment_id IN ($experiment_id)) ORDER BY mode"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "FactLens audit runs",
+      "type": "table",
+      "gridPos": { "x": 0, "y": 48, "w": 24, "h": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+          "format": "table",
+          "rawSql": "SELECT r.task_id, r.arm_name, r.active_score, a.mode, a.subclaims_total, a.subclaims_with_evidence, a.subclaim_recall, a.complete_evidence_coverage, a.all_required_subclaims_verified, a.unsupported_subclaim_rate, a.unsupported_verdict_rate, a.shared_graph_facts, a.cross_subclaim_edges, a.shared_evidence_reuse, a.required_path_found, a.answer_derived_from_graph_path, a.graph_contributed, a.graph_contribution_outcome, a.tokens_per_verified_subclaim, a.tokens_per_fully_verified_claim, a.fully_verified_claims_per_10k_tokens, a.evidence_span_ids, a.graph_fact_ids, a.graph_edge_ids FROM benchmark_metrics.benchmark_runs r JOIN benchmark_metrics.benchmark_factlens_audits a ON a.run_id = r.run_id WHERE ('$experiment_id' = 'All' OR r.experiment_id IN ($experiment_id)) AND ('$arm_name' = 'All' OR r.arm_name IN ($arm_name)) ORDER BY r.task_id, a.mode"
+        }
+      ]
+    }
+  ]
+}

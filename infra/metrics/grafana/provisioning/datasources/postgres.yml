@@ -1,0 +1,18 @@
+apiVersion: 1
+
+datasources:
+  - name: JMLC Metrics PostgreSQL
+    uid: jmlc_metrics_postgres
+    type: postgres
+    access: proxy
+    url: postgres:5432
+    database: jmlc
+    user: jmlc
+    secureJsonData:
+      password: jmlc_local
+    jsonData:
+      sslmode: disable
+      postgresVersion: 1600
+      timescaledb: false
+    isDefault: true
+    editable: true
