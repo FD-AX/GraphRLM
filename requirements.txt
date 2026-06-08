@@ -5,3 +5,4 @@ pydantic
 pydantic-ai
 sentence-transformers
 psycopg[binary]
+pytest
