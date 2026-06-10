@@ -42,14 +42,68 @@ def main() -> None:
     cases = [case for _, case in labeled_cases]
 
     seed_eval = evaluate_seed_retrieval(index, encoder, cases, top_k=args.top_k)
-    navigation_results = [
-        evaluate_navigation(index, encoder, cases, weights, top_k=args.top_k)
-        for weights in make_modes()
-    ]
-    cluster_eval = evaluate_active_profile_clusters(index, encoder, labeled_cases)
+
+    profile_mode_payloads = []
+    all_navigation_results = []
+    for profile_mode in profile_modes_to_run(args):
+        mode_encoder = GraphSemanticEncoder(
+            config=config.model_copy(update={"interaction_profile_mode": profile_mode}),
+            backend=backend,
+        )
+        navigation_results = [
+            evaluate_navigation(index, mode_encoder, cases, weights, top_k=args.top_k)
+            for weights in make_modes()
+        ]
+        all_navigation_results.extend(navigation_results)
+        cluster_eval = evaluate_active_profile_clusters(index, mode_encoder, labeled_cases)
+        profile_mode_payloads.append(
+            {
+                "interaction_profile_mode": profile_mode,
+                "navigation_modes": [
+                    {
+                        "mode": result.mode,
+                        "mean_next_hop_accuracy": result.mean_next_hop_accuracy,
+                        "mean_next_hop_mrr": result.mean_next_hop_mrr,
+                        "mean_next_hop_ndcg_at_k": result.mean_next_hop_ndcg_at_k,
+                        "mean_path_recall_at_k": result.mean_path_recall_at_k,
+                        "mean_evidence_recall_at_k": result.mean_evidence_recall_at_k,
+                        "mean_local_observation_recall_at_k": result.mean_local_observation_recall_at_k,
+                        "errors": [
+                            {
+                                "query": item.query,
+                                "selected_owner_id": item.selected_owner_id,
+                                "selected_document_id": item.selected_document_id,
+                                "top_candidates": [
+                                    {
+                                        "owner_id": candidate.owner_id,
+                                        "semantic_document_id": candidate.semantic_document_id,
+                                        "score": candidate.score,
+                                        "query_similarity": candidate.query_similarity,
+                                        "active_profile_similarity": candidate.active_profile_similarity,
+                                        "structural_confidence": candidate.structural_confidence,
+                                        "evidence_quality": candidate.evidence_quality,
+                                        "novelty": candidate.novelty,
+                                        "text": candidate.text,
+                                    }
+                                    for candidate in item.ranked_candidates[:3]
+                                ],
+                            }
+                            for item in result.case_results
+                            if item.next_hop_accuracy == 0.0
+                        ],
+                    }
+                    for result in navigation_results
+                ],
+                "active_profile_clusters": {
+                    "same_label_mean_similarity": cluster_eval.same_label_mean_similarity,
+                    "different_label_mean_similarity": cluster_eval.different_label_mean_similarity,
+                    "separation_margin": cluster_eval.separation_margin,
+                },
+            }
+        )
 
     payload = {
-        "benchmark": "query_conditioned_frontier_v1",
+        "benchmark": "query_conditioned_frontier_v2",
         "backend": backend.encoder_name,
         "encoder_version": backend.encoder_version,
         "embedding_dim": len(index.embedding_for("doc_entity_semyon")),
@@ -59,51 +113,12 @@ def main() -> None:
             "mean_mrr": seed_eval.mean_mrr,
             "mean_ndcg_at_k": seed_eval.mean_ndcg_at_k,
         },
-        "navigation_modes": [
-            {
-                "mode": result.mode,
-                "mean_next_hop_accuracy": result.mean_next_hop_accuracy,
-                "mean_next_hop_mrr": result.mean_next_hop_mrr,
-                "mean_next_hop_ndcg_at_k": result.mean_next_hop_ndcg_at_k,
-                "mean_path_recall_at_k": result.mean_path_recall_at_k,
-                "mean_evidence_recall_at_k": result.mean_evidence_recall_at_k,
-                "mean_local_observation_recall_at_k": result.mean_local_observation_recall_at_k,
-                "errors": [
-                    {
-                        "query": item.query,
-                        "selected_owner_id": item.selected_owner_id,
-                        "selected_document_id": item.selected_document_id,
-                        "top_candidates": [
-                            {
-                                "owner_id": candidate.owner_id,
-                                "semantic_document_id": candidate.semantic_document_id,
-                                "score": candidate.score,
-                                "query_similarity": candidate.query_similarity,
-                                "active_profile_similarity": candidate.active_profile_similarity,
-                                "structural_confidence": candidate.structural_confidence,
-                                "evidence_quality": candidate.evidence_quality,
-                                "novelty": candidate.novelty,
-                                "text": candidate.text,
-                            }
-                            for candidate in item.ranked_candidates[:3]
-                        ],
-                    }
-                    for item in result.case_results
-                    if item.next_hop_accuracy == 0.0
-                ],
-            }
-            for result in navigation_results
-        ],
-        "active_profile_clusters": {
-            "same_label_mean_similarity": cluster_eval.same_label_mean_similarity,
-            "different_label_mean_similarity": cluster_eval.different_label_mean_similarity,
-            "separation_margin": cluster_eval.separation_margin,
-        },
+        "profile_modes": profile_mode_payloads,
     }
     print(json.dumps(payload, ensure_ascii=False, indent=2))
 
     best_accuracy = max(
-        result.mean_next_hop_accuracy for result in navigation_results
+        result.mean_next_hop_accuracy for result in all_navigation_results
     )
     if args.assert_min_next_hop_accuracy is not None:
         if best_accuracy < args.assert_min_next_hop_accuracy:
@@ -111,6 +126,12 @@ def main() -> None:
                 f"best next-hop accuracy={best_accuracy:.3f} is below "
                 f"{args.assert_min_next_hop_accuracy:.3f}"
             )
+
+
+def profile_modes_to_run(args: argparse.Namespace) -> list[str]:
+    if args.profile_mode == "both":
+        return ["hashed_features", "contribution"]
+    return [args.profile_mode]
 
 
 def parse_args() -> argparse.Namespace:
@@ -126,6 +147,12 @@ def parse_args() -> argparse.Namespace:
         default="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
     )
     parser.add_argument("--device", default="cpu")
+    parser.add_argument(
+        "--profile-mode",
+        choices=["hashed_features", "contribution", "both"],
+        default="both",
+        help="Interaction profile construction for the active-profile signal.",
+    )
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--assert-min-next-hop-accuracy", type=float, default=None)
     return parser.parse_args()
@@ -155,7 +182,7 @@ def make_modes() -> list[FrontierScoringWeights]:
             novelty_weight=0.05,
         ),
     ]
-    for active_weight in [0.0, 0.05, 0.10, 0.20, 0.30]:
+    for active_weight in [0.0, 0.05, 0.10, 0.20, 0.30, 0.50]:
         modes.append(
             FrontierScoringWeights(
                 name=f"query_structure_active_{active_weight:.2f}",

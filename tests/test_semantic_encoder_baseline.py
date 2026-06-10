@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from hashlib import sha256
 
+from app.semantic_encoding.encoder import cosine_similarity
+
 from app.semantic_encoding import (
     EncoderConfig,
     FrontierScoringWeights,
@@ -52,7 +54,40 @@ def test_hashing_backend_is_explicit_fast_test_encoder() -> None:
     assert embedding.query_prefix == "query:"
     assert embedding.document_prefix == "document:"
     assert len(query) == 128
-    assert len(profile) == 32
+    assert len(profile) == 128
+
+
+def test_contribution_profile_keeps_native_dimensions_and_is_query_conditioned() -> None:
+    backend = HashingSemanticEncoder(dimensions=128)
+    contribution_encoder = GraphSemanticEncoder(
+        config=EncoderConfig(
+            projection_dim=128,
+            interaction_dim=32,
+            interaction_profile_mode="contribution",
+        ),
+        backend=backend,
+    )
+    hashed_encoder = GraphSemanticEncoder(
+        config=EncoderConfig(
+            projection_dim=128,
+            interaction_dim=32,
+            interaction_profile_mode="hashed_features",
+        ),
+        backend=backend,
+    )
+    document = make_document("forest", "semyon", "Semyon walked along the forest path")
+    embedding = contribution_encoder.encode_document(document).embedding
+    forest_query = contribution_encoder.encode_query("forest path")
+    door_query = contribution_encoder.encode_query("door repair")
+
+    forest_profile = contribution_encoder.interaction_profile(forest_query, embedding)
+    door_profile = contribution_encoder.interaction_profile(door_query, embedding)
+    hashed_profile = hashed_encoder.interaction_profile(forest_query, embedding)
+
+    assert len(forest_profile) == 128
+    assert len(hashed_profile) == 32
+    assert abs(cosine_similarity(forest_profile, forest_profile) - 1.0) < 1e-9
+    assert cosine_similarity(forest_profile, door_profile) < 0.99
 
 
 def test_seed_retrieval_evaluation_reports_rank_metrics() -> None:

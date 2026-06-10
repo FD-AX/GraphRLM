@@ -20,6 +20,7 @@ class EncoderConfig(BaseModel):
     projection_dim: int | None = None
     embedding_dim: int | None = None
     interaction_dim: int | None = 64
+    interaction_profile_mode: Literal["hashed_features", "contribution"] = "contribution"
     encoder_name: str = "hashing-bert-like"
     encoder_version: str = "graph_semantic_encoder_v1"
     transformer_model_name: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"

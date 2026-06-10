@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import math
+from functools import lru_cache
 from typing import Protocol
 
 from app.encoder.relation_encoder import (
@@ -191,6 +192,10 @@ class GraphSemanticEncoder:
         query_embedding: list[float],
         document_embedding: list[float],
     ) -> list[float]:
+        if self.config.interaction_profile_mode == "contribution":
+            return normalize(
+                [q * d for q, d in zip(query_embedding, document_embedding)]
+            )
         features = []
         for q, d in zip(query_embedding, document_embedding):
             features.extend([q, d, q * d, abs(q - d)])
@@ -246,8 +251,7 @@ class GraphSemanticEncoder:
         )
 
     def _feature_bucket(self, feature_index: int, dimensions: int) -> int:
-        digest = hashlib.sha256(str(feature_index).encode("utf-8")).digest()
-        return int.from_bytes(digest[:4], "big") % dimensions
+        return _feature_bucket_cached(feature_index, dimensions)
 
     def _hashing_dimensions(self) -> int:
         return self.config.embedding_dim or self.config.projection_dim or 256
@@ -260,6 +264,12 @@ class GraphSemanticEncoder:
         if self.config.interaction_dim:
             return self.config.interaction_dim
         return min(64, len(query_embedding), len(document_embedding))
+
+
+@lru_cache(maxsize=None)
+def _feature_bucket_cached(feature_index: int, dimensions: int) -> int:
+    digest = hashlib.sha256(str(feature_index).encode("utf-8")).digest()
+    return int.from_bytes(digest[:4], "big") % dimensions
 
 
 def _sentence_transformer_pooling_strategy(model) -> str:

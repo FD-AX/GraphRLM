@@ -122,16 +122,24 @@ def test_builds_local_graph_semantic_documents() -> None:
     assert any("steps" in document.text and "door" in document.text for document in documents)
 
 
-def test_encoder_outputs_256_space_and_64_interaction_profile() -> None:
+def test_encoder_outputs_256_space_and_mode_dependent_interaction_profile() -> None:
     documents = build_graph_semantic_documents(*make_snapshots())
     config = EncoderConfig(projection_dim=256, interaction_dim=64)
     encoder, embeddings, _ = encode_graph_semantic_documents(documents, config=config)
+    hashed_config = EncoderConfig(
+        projection_dim=256,
+        interaction_dim=64,
+        interaction_profile_mode="hashed_features",
+    )
+    hashed_encoder, _, _ = encode_graph_semantic_documents(documents, config=hashed_config)
     query = encoder.encode_query("Who heard steps behind the door?")
     profile = encoder.interaction_profile(query, embeddings[0].embedding)
+    hashed_profile = hashed_encoder.interaction_profile(query, embeddings[0].embedding)
 
     assert len(query) == 256
     assert all(len(embedding.embedding) == 256 for embedding in embeddings)
-    assert len(profile) == 64
+    assert len(profile) == 256
+    assert len(hashed_profile) == 64
     assert encoder.top_contribution_components(query, embeddings[0].embedding)
 
 
