@@ -195,6 +195,103 @@ class MuSiQueMDRIterativeArm:
         )
 
 
+class MuSiQueMDRPooledArm:
+    """Steelmanned MDR shape: latent query update + beam search.
+
+    Instead of concatenating passage text (which truncates in the encoder
+    window and drifts the query), the query embedding is updated in latent
+    space: q_t = normalize(w0 * q_0 + (1 - w0) * mean(selected passage
+    embeddings)). Chains are explored with beam search scored by the sum of
+    hop similarities, as in the original MDR. Same encoder, same top-k
+    evidence budget as every other arm.
+    """
+
+    name: BenchmarkArmName = "musique_mdr_pooled"
+
+    def __init__(
+        self,
+        encoder: GraphSemanticEncoder,
+        top_k: int = 5,
+        beam_width: int = 3,
+        query_anchor_weight: float = 0.6,
+    ) -> None:
+        self.encoder = encoder
+        self.top_k = top_k
+        self.beam_width = beam_width
+        self.query_anchor_weight = query_anchor_weight
+
+    def run_case(self, case: BenchmarkCase) -> BenchmarkArmResult:
+        from app.semantic_encoding.encoder import normalize, weighted_pool
+
+        started = perf_counter()
+        index = build_musique_semantic_index(case, self.encoder)
+        query_embedding = self.encoder.encode_query(case.question)
+        beams: list[tuple[list[str], list[float], float]] = [([], query_embedding, 0.0)]
+        for _ in range(self.top_k):
+            candidates = []
+            for selected, current_query, score_sum in beams:
+                results = index.search(
+                    current_query,
+                    top_k=self.beam_width,
+                    visited_document_ids=set(selected),
+                )
+                for result in results:
+                    new_selected = selected + [result.semantic_document_id]
+                    passage_mean = normalize(
+                        [
+                            sum(values) / len(new_selected)
+                            for values in zip(
+                                *(
+                                    index.embedding_for(document_id)
+                                    for document_id in new_selected
+                                )
+                            )
+                        ]
+                    )
+                    new_query = weighted_pool(
+                        [
+                            (query_embedding, self.query_anchor_weight),
+                            (passage_mean, 1.0 - self.query_anchor_weight),
+                        ]
+                    )
+                    candidates.append(
+                        (new_selected, new_query, score_sum + result.score)
+                    )
+            if not candidates:
+                break
+            candidates.sort(key=lambda item: (-item[2], item[0]))
+            seen_chains = set()
+            beams = []
+            for chain, query, score in candidates:
+                key = tuple(sorted(chain))
+                if key in seen_chains:
+                    continue
+                seen_chains.add(key)
+                beams.append((chain, query, score))
+                if len(beams) >= self.beam_width:
+                    break
+        best_chain = beams[0][0] if beams else []
+        evidence_ids = [
+            index.document_for(document_id).owner_id for document_id in best_chain
+        ]
+        return BenchmarkArmResult(
+            prediction="",
+            evidence_span_ids=evidence_ids,
+            latency_ms=int((perf_counter() - started) * 1000),
+            stop_reason="retrieval_complete",
+            trace_id=f"musique_mdr_pooled:{case.task_id}",
+            arm_input_hash=_hash_text(case.context),
+            trace=[
+                {
+                    "top_k": self.top_k,
+                    "beam_width": self.beam_width,
+                    "query_anchor_weight": self.query_anchor_weight,
+                    "retrieved": evidence_ids,
+                }
+            ],
+        )
+
+
 class MuSiQueGraphNavigatorArm:
     """Seeded dense search + structural frontier traversal with re-ranked output.
 

@@ -26,7 +26,8 @@ tests live in [docs/benchmarks/musique_completeness/](docs/benchmarks/musique_co
 | --- | ---: | ---: | ---: | ---: |
 | Keyword (lexical baseline) | 0.375 | 0.068 | — | — |
 | Cross-encoder, exhaustive matching | 0.600 | 0.206 | — | — |
-| MDR-style iterative re-querying | 0.538 | 0.208 | — | — |
+| MDR-style re-querying (text concat) | 0.538 | 0.208 | — | — |
+| MDR-style re-querying (latent + beam) | 0.538 | 0.220 | — | — |
 | Dense top-5 (no graph) | 0.586 | 0.210 | — | — |
 | Graph navigator | 0.623 | 0.298 | — | — |
 | Graph + interaction profile | 0.626 | 0.298 | — | — |
@@ -62,17 +63,18 @@ prematurely. Deeper discovery converts budget into completeness at roughly
 +1 pp complete coverage per ~1.7k tokens per case.
 
 Three graph-free retrieval families hit the same completeness plateau
-(~0.21 complete coverage): single-shot dense retrieval, exhaustive
+(~0.21-0.22 complete coverage): single-shot dense retrieval, exhaustive
 cross-encoder matching (`cross-encoder/ms-marco-MiniLM-L-6-v2`, every
 (question, paragraph) pair scored jointly - the upper bound of pairwise
-matching), and MDR-style iterative re-querying (hop t re-encodes
-question + previous passage and searches again, the Multi-hop Dense
-Retrieval shape, untrained, same encoder as ours). Cross-encoder vs dense:
-46W/48L paired, a wash. MDR-style vs dense: 27W/28L on coverage, also a
-wash. Graph connectivity breaks the plateau: the navigator beats exhaustive
-cross-encoder matching +9.2 pp complete coverage (81W/35L), MDR-style
-re-querying +9.0 pp (64W/19L), and graph-RLM beats the cross-encoder
-+28.8 pp (179W/35L).
+matching), and MDR-style iterative re-querying (the Multi-hop Dense
+Retrieval shape, untrained, same encoder as ours) in two variants: naive
+text concatenation, and a steelmanned version with latent query pooling
+plus beam search that avoids encoder-window truncation. Cross-encoder vs
+dense: 46W/48L paired, a wash. Steelmanned MDR-style vs dense: 29W/24L on
+coverage, also a wash. Graph connectivity breaks the plateau: the navigator
+beats exhaustive cross-encoder matching +9.2 pp complete coverage
+(81W/35L), steelmanned MDR-style re-querying +7.8 pp (63W/24L), and
+graph-RLM beats the cross-encoder +28.8 pp (179W/35L).
 
 Paired per-case comparisons (sign tests, all p << 0.001 except the
 interaction-profile delta): graph vs dense +8.8 pp complete coverage

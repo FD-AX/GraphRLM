@@ -233,6 +233,38 @@
           "answer_f1_mean": null
         }
       }
+    },
+    "musique_mdr_pooled": {
+      "runs": 500,
+      "errors": 0,
+      "evidence_recall_mean": 0.5383,
+      "evidence_precision_mean": 0.2964,
+      "complete_evidence_coverage_mean": 0.22,
+      "retrieved_count_mean": 5.0,
+      "answer_f1_mean": null,
+      "exact_match_mean": null,
+      "latency_ms_mean": 174.45,
+      "total_tokens_sum": 0,
+      "by_hops": {
+        "2": {
+          "runs": 200,
+          "evidence_recall_mean": 0.65,
+          "complete_evidence_coverage_mean": 0.395,
+          "answer_f1_mean": null
+        },
+        "3": {
+          "runs": 150,
+          "evidence_recall_mean": 0.5044,
+          "complete_evidence_coverage_mean": 0.1667,
+          "answer_f1_mean": null
+        },
+        "4": {
+          "runs": 150,
+          "evidence_recall_mean": 0.4233,
+          "complete_evidence_coverage_mean": 0.04,
+          "answer_f1_mean": null
+        }
+      }
     }
   },
   "paired_comparisons": {

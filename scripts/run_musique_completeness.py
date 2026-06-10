@@ -17,6 +17,7 @@ from app.benchmarks.musique.arms import (
     MuSiQueGraphRLMArm,
     MuSiQueKeywordArm,
     MuSiQueMDRIterativeArm,
+    MuSiQueMDRPooledArm,
 )
 from app.benchmarks.musique.loader import MuSiQueSource, load_musique_stratified_cases
 from app.benchmarks.musique.scorer import MuSiQueCompletenessScorer
@@ -135,6 +136,14 @@ def build_arms(args: argparse.Namespace) -> list:
             arms.append(MuSiQueDenseTopKArm(encoder_with(0.0), top_k=args.top_k))
         elif name == "mdr":
             arms.append(MuSiQueMDRIterativeArm(encoder_with(0.0), top_k=args.top_k))
+        elif name == "mdr_pooled":
+            arms.append(
+                MuSiQueMDRPooledArm(
+                    encoder_with(0.0),
+                    top_k=args.top_k,
+                    beam_width=args.beam_width,
+                )
+            )
         elif name == "graph":
             arms.append(
                 MuSiQueGraphNavigatorArm(
