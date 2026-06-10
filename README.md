@@ -29,10 +29,36 @@ tests live in [docs/benchmarks/musique_completeness/](docs/benchmarks/musique_co
 | Dense top-5 (no graph) | 0.586 | 0.210 | — | — |
 | Graph navigator | 0.623 | 0.298 | — | — |
 | Graph + interaction profile | 0.626 | 0.298 | — | — |
-| Graph-RLM discovery | 0.771 | 0.494 | 0.573 | 0.470 |
+| Graph-RLM discovery (v1 budget) | 0.771 | 0.494 | 0.573 | 0.470 |
+| Graph-RLM discovery (v2 budget) | 0.872 | 0.700 | 0.639 | 0.522 |
 
-All arms cover the full 500 cases with zero errors. The graph-RLM arm spends
-~32k tokens (~$0.013, gpt-5-mini) per case; the whole 500-case run cost ~$6.
+All arms cover the full 500 cases with zero errors. The v1 graph-RLM arm
+spends ~32k tokens (~$0.013, gpt-5-mini) per case (~$6 per 500-case run);
+v2 spends ~68k (~$0.025, ~$12 per run).
+
+### Discovery budget ablation (v1 vs v2)
+
+The only differences between the two graph-RLM rows are the controller
+budget and two completeness guards; the graph, encoder, controller model
+and cases are identical. v1: 10 model calls, depth 5, 6 expansions. v2: 16
+calls, depth 8, 12 expansions, hop-chain decomposition required before
+answering, and answer decisions backed by fewer than two evidence
+paragraphs are redirected toward the stated evidence gap. Full data:
+[docs/benchmarks/musique_completeness/rlm_budget_comparison.json](docs/benchmarks/musique_completeness/rlm_budget_comparison.json).
+
+| Complete coverage | v1 | v2 | Evidence recall | v1 | v2 |
+| --- | ---: | ---: | --- | ---: | ---: |
+| 2-hop | 0.740 | 0.885 | 2-hop | 0.868 | 0.940 |
+| 3-hop | 0.280 | 0.460 | 3-hop | 0.664 | 0.771 |
+| 4-hop | 0.380 | 0.693 | 4-hop | 0.748 | 0.882 |
+| all | 0.494 | 0.700 | all | 0.771 | 0.872 |
+
+Paired on the same 500 cases: +20.6 pp complete coverage (131W/28L),
++10.1 pp recall (160W/41L), +6.6 pp answer F1 (111W/65L). The gain
+concentrates exactly where v1 diagnostics located the losses: 208 v1 cases
+were cut mid-collection by the call budget and 87 3-hop cases answered
+prematurely. Deeper discovery converts budget into completeness at roughly
++1 pp complete coverage per ~1.7k tokens per case.
 
 The cross-encoder baseline (`cross-encoder/ms-marco-MiniLM-L-6-v2`) scores
 every (question, paragraph) pair jointly - the upper bound of pure pairwise

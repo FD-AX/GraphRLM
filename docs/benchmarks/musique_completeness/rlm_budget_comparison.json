@@ -1,0 +1,104 @@
+{
+  "comparison": "rlm_controller_budget_ablation",
+  "v1": {
+    "label": "budget: 10 calls, depth 5, expansions 6",
+    "runs": 500,
+    "evidence_recall_mean": 0.7708,
+    "complete_coverage_mean": 0.494,
+    "answer_f1_mean": 0.5731,
+    "exact_match_mean": 0.47,
+    "retrieved_count_mean": 7.426,
+    "model_calls_mean": 7.576,
+    "tokens_per_case_mean": 32273.538,
+    "stop_reasons": {
+      "answer": 218,
+      "insufficient_evidence": 43,
+      "model_call_budget_exhausted": 208,
+      "max_depth_reached": 31
+    },
+    "by_hops": {
+      "2": {
+        "runs": 200,
+        "evidence_recall_mean": 0.8675,
+        "complete_coverage_mean": 0.74,
+        "answer_f1_mean": 0.689,
+        "tokens_per_case_mean": 28702.615
+      },
+      "3": {
+        "runs": 150,
+        "evidence_recall_mean": 0.6644,
+        "complete_coverage_mean": 0.28,
+        "answer_f1_mean": 0.479,
+        "tokens_per_case_mean": 32162.4
+      },
+      "4": {
+        "runs": 150,
+        "evidence_recall_mean": 0.7483,
+        "complete_coverage_mean": 0.38,
+        "answer_f1_mean": 0.5128,
+        "tokens_per_case_mean": 37145.9067
+      }
+    }
+  },
+  "v2": {
+    "label": "budget: 16 calls, depth 8, expansions 12, hop-chain prompt, min-2-evidence answer guard",
+    "runs": 500,
+    "evidence_recall_mean": 0.8718,
+    "complete_coverage_mean": 0.7,
+    "answer_f1_mean": 0.6386,
+    "exact_match_mean": 0.522,
+    "retrieved_count_mean": 11.072,
+    "model_calls_mean": 11.286,
+    "tokens_per_case_mean": 68339.464,
+    "stop_reasons": {
+      "answer": 207,
+      "insufficient_evidence": 60,
+      "model_call_budget_exhausted": 217,
+      "max_depth_reached": 16
+    },
+    "by_hops": {
+      "2": {
+        "runs": 200,
+        "evidence_recall_mean": 0.94,
+        "complete_coverage_mean": 0.885,
+        "answer_f1_mean": 0.7297,
+        "tokens_per_case_mean": 58974.645
+      },
+      "3": {
+        "runs": 150,
+        "evidence_recall_mean": 0.7711,
+        "complete_coverage_mean": 0.46,
+        "answer_f1_mean": 0.5869,
+        "tokens_per_case_mean": 66084.3733
+      },
+      "4": {
+        "runs": 150,
+        "evidence_recall_mean": 0.8817,
+        "complete_coverage_mean": 0.6933,
+        "answer_f1_mean": 0.5689,
+        "tokens_per_case_mean": 83080.98
+      }
+    }
+  },
+  "paired_v2_vs_v1": {
+    "evidence_recall": {
+      "v2_wins": 160,
+      "v2_losses": 41,
+      "ties": 299,
+      "mean_diff_v2_minus_v1": 0.101
+    },
+    "complete_evidence_coverage": {
+      "v2_wins": 131,
+      "v2_losses": 28,
+      "ties": 341,
+      "mean_diff_v2_minus_v1": 0.206
+    },
+    "answer_f1": {
+      "v2_wins": 111,
+      "v2_losses": 65,
+      "ties": 324,
+      "mean_diff_v2_minus_v1": 0.0655
+    },
+    "shared_cases": 500
+  }
+}

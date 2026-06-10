@@ -1,0 +1,47 @@
+{
+  "benchmark": "musique_completeness_v1",
+  "run_batch": "musique_500_v2",
+  "dataset": {
+    "name": "dgslibisey/MuSiQue",
+    "split": "validation",
+    "selection": "stratified_by_hops_first_match"
+  },
+  "retrieval_budget_top_k": 5,
+  "encoder": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "rlm_controller": "gpt-5-mini (reasoning_effort=low)",
+  "arms": {
+    "musique_graph_rlm": {
+      "runs": 500,
+      "errors": 0,
+      "evidence_recall_mean": 0.8718,
+      "evidence_precision_mean": 0.3687,
+      "complete_evidence_coverage_mean": 0.7,
+      "retrieved_count_mean": 11.072,
+      "answer_f1_mean": 0.6386,
+      "exact_match_mean": 0.522,
+      "latency_ms_mean": 73038.49,
+      "total_tokens_sum": 34169732,
+      "by_hops": {
+        "2": {
+          "runs": 200,
+          "evidence_recall_mean": 0.94,
+          "complete_evidence_coverage_mean": 0.885,
+          "answer_f1_mean": 0.7297
+        },
+        "3": {
+          "runs": 150,
+          "evidence_recall_mean": 0.7711,
+          "complete_evidence_coverage_mean": 0.46,
+          "answer_f1_mean": 0.5869
+        },
+        "4": {
+          "runs": 150,
+          "evidence_recall_mean": 0.8817,
+          "complete_evidence_coverage_mean": 0.6933,
+          "answer_f1_mean": 0.5689
+        }
+      }
+    }
+  },
+  "paired_comparisons": {}
+}
