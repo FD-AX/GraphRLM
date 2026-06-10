@@ -5,7 +5,7 @@ from typing import Any, Literal, Protocol
 from pydantic import BaseModel, Field
 
 
-BenchmarkName = Literal["s_niah", "oolong", "oolong_pairs", "factlens"]
+BenchmarkName = Literal["s_niah", "oolong", "oolong_pairs", "factlens", "musique"]
 BenchmarkArmName = Literal[
     "direct_model",
     "flat_subclaim_verification",
@@ -31,6 +31,11 @@ BenchmarkArmName = Literal[
     "graph_rlm_semantic_graph_ops",
     "gold_fixture",
     "wrong_fixture",
+    "musique_keyword",
+    "musique_dense_topk",
+    "musique_graph_navigator",
+    "musique_graph_navigator_active",
+    "musique_graph_rlm",
 ]
 
 
