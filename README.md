@@ -16,6 +16,17 @@ is activated only when the completeness audit reports a real gap.
 
 ### MuSiQue evidence completeness (500 validation cases, stratified 2/3/4-hop)
 
+**Central finding: among methods with no training on the dataset, graph
+connectivity is the only thing that breaks the evidence-completeness
+plateau.** Every graph-free retrieval family we tested - lexical overlap,
+single-shot dense, exhaustive cross-encoder matching, and MDR-style
+iterative re-querying (including an anchor-weight sweep over its whole
+untrained family) - lands on ~0.21 complete coverage. The same encoder
+navigating typed graph links reaches 0.30, and the gap-driven discovery
+contour reaches 0.70, approaching supervised chain retrievers trained on
+MuSiQue (Beam Retrieval, 0.774) without having seen a single training
+example.
+
 Equal retrieval budget (top-5 paragraphs) for all non-RLM arms. Latent graph
 links and query encodings come from the same BERT-family encoder
 (multilingual MiniLM); the graph-RLM arm adds a gpt-5-mini discovery
