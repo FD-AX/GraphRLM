@@ -39,10 +39,13 @@ def main() -> None:
         for part in args.hop_mix.split(",")
     }
     print(f"Loading MuSiQue cases: {per_hop} ...", flush=True)
-    cases = load_musique_stratified_cases(
-        MuSiQueSource(split=args.split),
-        per_hop_counts=per_hop,
-    )
+    if args.cases_file:
+        cases = _load_cases_file(Path(args.cases_file), per_hop)
+    else:
+        cases = load_musique_stratified_cases(
+            MuSiQueSource(split=args.split),
+            per_hop_counts=per_hop,
+        )
     print(f"Loaded {len(cases)} cases.", flush=True)
     cases_path = output_dir / "cases.jsonl"
     if not cases_path.exists():
@@ -151,6 +154,24 @@ def build_arms(args: argparse.Namespace) -> list:
     return arms
 
 
+def _load_cases_file(path: Path, per_hop: dict[int, int]):
+    from app.benchmarks.models import BenchmarkCase
+
+    remaining = dict(per_hop)
+    cases = []
+    with path.open("r", encoding="utf-8") as handle:
+        for line in handle:
+            line = line.strip()
+            if not line:
+                continue
+            case = BenchmarkCase.model_validate_json(line)
+            hops = case.expected_hops or 0
+            if remaining.get(hops, 0) > 0:
+                cases.append(case)
+                remaining[hops] -= 1
+    return cases
+
+
 def _completed_keys(records_path: Path) -> set[tuple[str, str]]:
     completed = set()
     if not records_path.exists():
@@ -257,6 +278,11 @@ def summarize(records_path: Path) -> dict:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--split", default="validation")
+    parser.add_argument(
+        "--cases-file",
+        default=None,
+        help="Read cases from an existing cases.jsonl instead of the HF API.",
+    )
     parser.add_argument("--hop-mix", default="2:200,3:150,4:150")
     parser.add_argument(
         "--arms",
