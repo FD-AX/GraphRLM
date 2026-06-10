@@ -11,6 +11,7 @@ services:
     volumes:
       - jmlc_metrics_postgres:/var/lib/postgresql/data
       - ../postgres/benchmark_metrics.sql:/docker-entrypoint-initdb.d/001_benchmark_metrics.sql:ro
+      - ../postgres/musique_completeness.sql:/docker-entrypoint-initdb.d/002_musique_completeness.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U jmlc -d jmlc"]
       interval: 5s

@@ -53,6 +53,11 @@ def main() -> None:
             for case in cases:
                 handle.write(case.model_dump_json() + "\n")
 
+    if args.shard:
+        shard_index, shard_count = (int(part) for part in args.shard.split("/"))
+        cases = [case for index, case in enumerate(cases) if index % shard_count == shard_index]
+        print(f"Shard {args.shard}: {len(cases)} cases.", flush=True)
+
     arms = build_arms(args)
     scorer = MuSiQueCompletenessScorer()
 
@@ -284,6 +289,11 @@ def parse_args() -> argparse.Namespace:
         help="Read cases from an existing cases.jsonl instead of the HF API.",
     )
     parser.add_argument("--hop-mix", default="2:200,3:150,4:150")
+    parser.add_argument(
+        "--shard",
+        default=None,
+        help="'i/n' to process only cases with index %% n == i (parallel runs).",
+    )
     parser.add_argument(
         "--arms",
         default="keyword,dense,graph,graph_active",

@@ -1,0 +1,232 @@
+{
+  "benchmark": "musique_completeness_v1",
+  "run_batch": "musique_500_v1",
+  "dataset": {
+    "name": "dgslibisey/MuSiQue",
+    "split": "validation",
+    "selection": "stratified_by_hops_first_match"
+  },
+  "retrieval_budget_top_k": 5,
+  "encoder": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "rlm_controller": "gpt-5-mini (reasoning_effort=low)",
+  "arms": {
+    "musique_dense_topk": {
+      "runs": 500,
+      "errors": 0,
+      "evidence_recall_mean": 0.5857,
+      "evidence_precision_mean": 0.3264,
+      "complete_evidence_coverage_mean": 0.21,
+      "retrieved_count_mean": 5.0,
+      "answer_f1_mean": null,
+      "exact_match_mean": null,
+      "latency_ms_mean": 143.468,
+      "total_tokens_sum": 0,
+      "by_hops": {
+        "2": {
+          "runs": 200,
+          "evidence_recall_mean": 0.67,
+          "complete_evidence_coverage_mean": 0.39,
+          "answer_f1_mean": null
+        },
+        "3": {
+          "runs": 150,
+          "evidence_recall_mean": 0.5822,
+          "complete_evidence_coverage_mean": 0.14,
+          "answer_f1_mean": null
+        },
+        "4": {
+          "runs": 150,
+          "evidence_recall_mean": 0.4767,
+          "complete_evidence_coverage_mean": 0.04,
+          "answer_f1_mean": null
+        }
+      }
+    },
+    "musique_graph_navigator": {
+      "runs": 500,
+      "errors": 0,
+      "evidence_recall_mean": 0.623,
+      "evidence_precision_mean": 0.3428,
+      "complete_evidence_coverage_mean": 0.298,
+      "retrieved_count_mean": 5.0,
+      "answer_f1_mean": null,
+      "exact_match_mean": null,
+      "latency_ms_mean": 24.678,
+      "total_tokens_sum": 0,
+      "by_hops": {
+        "2": {
+          "runs": 200,
+          "evidence_recall_mean": 0.7525,
+          "complete_evidence_coverage_mean": 0.55,
+          "answer_f1_mean": null
+        },
+        "3": {
+          "runs": 150,
+          "evidence_recall_mean": 0.5867,
+          "complete_evidence_coverage_mean": 0.2,
+          "answer_f1_mean": null
+        },
+        "4": {
+          "runs": 150,
+          "evidence_recall_mean": 0.4867,
+          "complete_evidence_coverage_mean": 0.06,
+          "answer_f1_mean": null
+        }
+      }
+    },
+    "musique_graph_navigator_active": {
+      "runs": 500,
+      "errors": 0,
+      "evidence_recall_mean": 0.6262,
+      "evidence_precision_mean": 0.3456,
+      "complete_evidence_coverage_mean": 0.298,
+      "retrieved_count_mean": 5.0,
+      "answer_f1_mean": null,
+      "exact_match_mean": null,
+      "latency_ms_mean": 24.52,
+      "total_tokens_sum": 0,
+      "by_hops": {
+        "2": {
+          "runs": 200,
+          "evidence_recall_mean": 0.75,
+          "complete_evidence_coverage_mean": 0.545,
+          "answer_f1_mean": null
+        },
+        "3": {
+          "runs": 150,
+          "evidence_recall_mean": 0.5889,
+          "complete_evidence_coverage_mean": 0.2067,
+          "answer_f1_mean": null
+        },
+        "4": {
+          "runs": 150,
+          "evidence_recall_mean": 0.4983,
+          "complete_evidence_coverage_mean": 0.06,
+          "answer_f1_mean": null
+        }
+      }
+    },
+    "musique_graph_rlm": {
+      "runs": 121,
+      "errors": 0,
+      "evidence_recall_mean": 0.8423,
+      "evidence_precision_mean": 0.3687,
+      "complete_evidence_coverage_mean": 0.6694,
+      "retrieved_count_mean": 7.6033,
+      "answer_f1_mean": 0.5896,
+      "exact_match_mean": 0.4711,
+      "latency_ms_mean": 44162.3223,
+      "total_tokens_sum": 3716526,
+      "by_hops": {
+        "2": {
+          "runs": 91,
+          "evidence_recall_mean": 0.8901,
+          "complete_evidence_coverage_mean": 0.7802,
+          "answer_f1_mean": 0.6777
+        },
+        "3": {
+          "runs": 15,
+          "evidence_recall_mean": 0.6444,
+          "complete_evidence_coverage_mean": 0.2,
+          "answer_f1_mean": 0.3119
+        },
+        "4": {
+          "runs": 15,
+          "evidence_recall_mean": 0.75,
+          "complete_evidence_coverage_mean": 0.4667,
+          "answer_f1_mean": 0.3333
+        }
+      }
+    },
+    "musique_keyword": {
+      "runs": 500,
+      "errors": 0,
+      "evidence_recall_mean": 0.3747,
+      "evidence_precision_mean": 0.206,
+      "complete_evidence_coverage_mean": 0.068,
+      "retrieved_count_mean": 5.0,
+      "answer_f1_mean": null,
+      "exact_match_mean": null,
+      "latency_ms_mean": 0.0,
+      "total_tokens_sum": 0,
+      "by_hops": {
+        "2": {
+          "runs": 200,
+          "evidence_recall_mean": 0.445,
+          "complete_evidence_coverage_mean": 0.165,
+          "answer_f1_mean": null
+        },
+        "3": {
+          "runs": 150,
+          "evidence_recall_mean": 0.3756,
+          "complete_evidence_coverage_mean": 0.0067,
+          "answer_f1_mean": null
+        },
+        "4": {
+          "runs": 150,
+          "evidence_recall_mean": 0.28,
+          "complete_evidence_coverage_mean": 0.0,
+          "answer_f1_mean": null
+        }
+      }
+    }
+  },
+  "paired_comparisons": {
+    "musique_graph_navigator__vs__musique_dense_topk": {
+      "evidence_recall": {
+        "wins": 68,
+        "losses": 31,
+        "ties": 401,
+        "mean_diff": 0.0373
+      },
+      "complete_evidence_coverage": {
+        "wins": 52,
+        "losses": 8,
+        "ties": 440,
+        "mean_diff": 0.088
+      }
+    },
+    "musique_graph_navigator_active__vs__musique_graph_navigator": {
+      "evidence_recall": {
+        "wins": 9,
+        "losses": 2,
+        "ties": 489,
+        "mean_diff": 0.0032
+      },
+      "complete_evidence_coverage": {
+        "wins": 1,
+        "losses": 1,
+        "ties": 498,
+        "mean_diff": 0.0
+      }
+    },
+    "musique_graph_rlm__vs__musique_graph_navigator": {
+      "evidence_recall": {
+        "wins": 40,
+        "losses": 6,
+        "ties": 75,
+        "mean_diff": 0.1433
+      },
+      "complete_evidence_coverage": {
+        "wins": 29,
+        "losses": 3,
+        "ties": 89,
+        "mean_diff": 0.2149
+      }
+    },
+    "musique_graph_rlm__vs__musique_dense_topk": {
+      "evidence_recall": {
+        "wins": 53,
+        "losses": 7,
+        "ties": 61,
+        "mean_diff": 0.2004
+      },
+      "complete_evidence_coverage": {
+        "wins": 43,
+        "losses": 3,
+        "ties": 75,
+        "mean_diff": 0.3306
+      }
+    }
+  }
+}

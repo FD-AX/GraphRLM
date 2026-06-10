@@ -1,0 +1,2170 @@
+{
+  "benchmark": "query_conditioned_frontier_v2",
+  "backend": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "encoder_version": "transformer_semantic_encoder_v1",
+  "embedding_dim": 384,
+  "case_count": 25,
+  "seed_retrieval": {
+    "mean_recall_at_k": 0.61,
+    "mean_mrr": 0.93,
+    "mean_ndcg_at_k": 0.6611957678726581
+  },
+  "profile_modes": [
+    {
+      "interaction_profile_mode": "hashed_features",
+      "navigation_modes": [
+        {
+          "mode": "query_cosine",
+          "mean_next_hop_accuracy": 0.88,
+          "mean_next_hop_mrr": 0.93,
+          "mean_next_hop_ndcg_at_k": 0.9477014426086524,
+          "mean_path_recall_at_k": 1.0,
+          "mean_evidence_recall_at_k": 0.7333333333333332,
+          "mean_local_observation_recall_at_k": 0.7333333333333332,
+          "errors": [
+            {
+              "query": "Whose feelings caused conflict around Semyon?",
+              "selected_owner_id": "entity_ivan",
+              "selected_document_id": "doc_ivan_confront",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_confront",
+                  "score": 0.8044622794662941,
+                  "query_similarity": 0.6089245589325883,
+                  "active_profile_similarity": 0.8830400846176636,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan confronted Semyon after the dispute became open conflict."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7916762342083885,
+                  "query_similarity": 0.5833524684167771,
+                  "active_profile_similarity": 0.8761834021606995,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_jealous",
+                  "score": 0.7912453357207543,
+                  "query_similarity": 0.5824906714415086,
+                  "active_profile_similarity": 0.8752606611794227,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan was jealous of Semyon and challenged him."
+                }
+              ]
+            },
+            {
+              "query": "Where did Semyon go with the rifle?",
+              "selected_owner_id": "object_rifle",
+              "selected_document_id": "doc_rifle_weapon",
+              "top_candidates": [
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_weapon",
+                  "score": 0.8712191997873058,
+                  "query_similarity": 0.7424383995746114,
+                  "active_profile_similarity": 0.8762731467228859,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The rifle was Semyon's hunting weapon."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_carry",
+                  "score": 0.837659971909877,
+                  "query_similarity": 0.6753199438197538,
+                  "active_profile_similarity": 0.9048346681601018,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon carried his rifle while entering the forest."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_protection",
+                  "score": 0.7253645979248158,
+                  "query_similarity": 0.4507291958496315,
+                  "active_profile_similarity": 0.9175736440774773,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The hunter used the weapon for protection."
+                }
+              ]
+            },
+            {
+              "query": "Who fought with Semyon over Anna?",
+              "selected_owner_id": "entity_anna",
+              "selected_document_id": "doc_anna_quarrel",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.8159716335118312,
+                  "query_similarity": 0.6319432670236623,
+                  "active_profile_similarity": 0.8738998887933799,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_rival",
+                  "score": 0.7998303527964363,
+                  "query_similarity": 0.5996607055928727,
+                  "active_profile_similarity": 0.9094949462461422,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan rivaled Semyon and competed with him over Anna."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_protect",
+                  "score": 0.7813082968395906,
+                  "query_similarity": 0.5626165936791812,
+                  "active_profile_similarity": 0.8914531110693747,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon protected Anna from a stranger and cared about her safety."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "query_structure",
+          "mean_next_hop_accuracy": 0.88,
+          "mean_next_hop_mrr": 0.93,
+          "mean_next_hop_ndcg_at_k": 0.9477014426086524,
+          "mean_path_recall_at_k": 1.0,
+          "mean_evidence_recall_at_k": 0.7333333333333332,
+          "mean_local_observation_recall_at_k": 0.7333333333333332,
+          "errors": [
+            {
+              "query": "Whose feelings caused conflict around Semyon?",
+              "selected_owner_id": "entity_ivan",
+              "selected_document_id": "doc_ivan_confront",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_confront",
+                  "score": 0.7881235956264058,
+                  "query_similarity": 0.6089245589325883,
+                  "active_profile_similarity": 0.8830400846176636,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan confronted Semyon after the dispute became open conflict."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7791733639458719,
+                  "query_similarity": 0.5833524684167771,
+                  "active_profile_similarity": 0.8761834021606995,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_jealous",
+                  "score": 0.7788717350045279,
+                  "query_similarity": 0.5824906714415086,
+                  "active_profile_similarity": 0.8752606611794227,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan was jealous of Semyon and challenged him."
+                }
+              ]
+            },
+            {
+              "query": "Where did Semyon go with the rifle?",
+              "selected_owner_id": "object_rifle",
+              "selected_document_id": "doc_rifle_weapon",
+              "top_candidates": [
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_weapon",
+                  "score": 0.8348534398511139,
+                  "query_similarity": 0.7424383995746114,
+                  "active_profile_similarity": 0.8762731467228859,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The rifle was Semyon's hunting weapon."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_carry",
+                  "score": 0.8113619803369138,
+                  "query_similarity": 0.6753199438197538,
+                  "active_profile_similarity": 0.9048346681601018,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon carried his rifle while entering the forest."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_protection",
+                  "score": 0.732755218547371,
+                  "query_similarity": 0.4507291958496315,
+                  "active_profile_similarity": 0.9175736440774773,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The hunter used the weapon for protection."
+                }
+              ]
+            },
+            {
+              "query": "Who fought with Semyon over Anna?",
+              "selected_owner_id": "entity_anna",
+              "selected_document_id": "doc_anna_quarrel",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7961801434582818,
+                  "query_similarity": 0.6319432670236623,
+                  "active_profile_similarity": 0.8738998887933799,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_rival",
+                  "score": 0.7848812469575054,
+                  "query_similarity": 0.5996607055928727,
+                  "active_profile_similarity": 0.9094949462461422,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan rivaled Semyon and competed with him over Anna."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_protect",
+                  "score": 0.7719158077877133,
+                  "query_similarity": 0.5626165936791812,
+                  "active_profile_similarity": 0.8914531110693747,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon protected Anna from a stranger and cared about her safety."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "query_structure_active_0.00",
+          "mean_next_hop_accuracy": 0.88,
+          "mean_next_hop_mrr": 0.93,
+          "mean_next_hop_ndcg_at_k": 0.9477014426086524,
+          "mean_path_recall_at_k": 1.0,
+          "mean_evidence_recall_at_k": 0.7333333333333332,
+          "mean_local_observation_recall_at_k": 0.7333333333333332,
+          "errors": [
+            {
+              "query": "Whose feelings caused conflict around Semyon?",
+              "selected_owner_id": "entity_ivan",
+              "selected_document_id": "doc_ivan_confront",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_confront",
+                  "score": 0.7881235956264058,
+                  "query_similarity": 0.6089245589325883,
+                  "active_profile_similarity": 0.8830400846176636,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan confronted Semyon after the dispute became open conflict."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7791733639458719,
+                  "query_similarity": 0.5833524684167771,
+                  "active_profile_similarity": 0.8761834021606995,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_jealous",
+                  "score": 0.7788717350045279,
+                  "query_similarity": 0.5824906714415086,
+                  "active_profile_similarity": 0.8752606611794227,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan was jealous of Semyon and challenged him."
+                }
+              ]
+            },
+            {
+              "query": "Where did Semyon go with the rifle?",
+              "selected_owner_id": "object_rifle",
+              "selected_document_id": "doc_rifle_weapon",
+              "top_candidates": [
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_weapon",
+                  "score": 0.8348534398511139,
+                  "query_similarity": 0.7424383995746114,
+                  "active_profile_similarity": 0.8762731467228859,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The rifle was Semyon's hunting weapon."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_carry",
+                  "score": 0.8113619803369138,
+                  "query_similarity": 0.6753199438197538,
+                  "active_profile_similarity": 0.9048346681601018,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon carried his rifle while entering the forest."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_protection",
+                  "score": 0.732755218547371,
+                  "query_similarity": 0.4507291958496315,
+                  "active_profile_similarity": 0.9175736440774773,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The hunter used the weapon for protection."
+                }
+              ]
+            },
+            {
+              "query": "Who fought with Semyon over Anna?",
+              "selected_owner_id": "entity_anna",
+              "selected_document_id": "doc_anna_quarrel",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7961801434582818,
+                  "query_similarity": 0.6319432670236623,
+                  "active_profile_similarity": 0.8738998887933799,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_rival",
+                  "score": 0.7848812469575054,
+                  "query_similarity": 0.5996607055928727,
+                  "active_profile_similarity": 0.9094949462461422,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan rivaled Semyon and competed with him over Anna."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_protect",
+                  "score": 0.7719158077877133,
+                  "query_similarity": 0.5626165936791812,
+                  "active_profile_similarity": 0.8914531110693747,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon protected Anna from a stranger and cared about her safety."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "query_structure_active_0.05",
+          "mean_next_hop_accuracy": 0.88,
+          "mean_next_hop_mrr": 0.93,
+          "mean_next_hop_ndcg_at_k": 0.9477014426086524,
+          "mean_path_recall_at_k": 1.0,
+          "mean_evidence_recall_at_k": 0.7333333333333332,
+          "mean_local_observation_recall_at_k": 0.7333333333333332,
+          "errors": [
+            {
+              "query": "Whose feelings caused conflict around Semyon?",
+              "selected_owner_id": "entity_ivan",
+              "selected_document_id": "doc_ivan_confront",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_confront",
+                  "score": 0.7954281883255689,
+                  "query_similarity": 0.6089245589325883,
+                  "active_profile_similarity": 0.8830400846176636,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan confronted Semyon after the dispute became open conflict."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7867409038094184,
+                  "query_similarity": 0.5833524684167771,
+                  "active_profile_similarity": 0.8761834021606995,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_jealous",
+                  "score": 0.7864316681276319,
+                  "query_similarity": 0.5824906714415086,
+                  "active_profile_similarity": 0.8752606611794227,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan was jealous of Semyon and challenged him."
+                }
+              ]
+            },
+            {
+              "query": "Where did Semyon go with the rifle?",
+              "selected_owner_id": "object_rifle",
+              "selected_document_id": "doc_rifle_weapon",
+              "top_candidates": [
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_weapon",
+                  "score": 0.8397716843039867,
+                  "query_similarity": 0.7424383995746114,
+                  "active_profile_similarity": 0.8762731467228859,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The rifle was Semyon's hunting weapon."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_carry",
+                  "score": 0.8180789019437298,
+                  "query_similarity": 0.6753199438197538,
+                  "active_profile_similarity": 0.9048346681601018,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon carried his rifle while entering the forest."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_protection",
+                  "score": 0.7435186282374362,
+                  "query_similarity": 0.4507291958496315,
+                  "active_profile_similarity": 0.9175736440774773,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The hunter used the weapon for protection."
+                }
+              ]
+            },
+            {
+              "query": "Who fought with Semyon over Anna?",
+              "selected_owner_id": "entity_anna",
+              "selected_document_id": "doc_anna_quarrel",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.8028834673124917,
+                  "query_similarity": 0.6319432670236623,
+                  "active_profile_similarity": 0.8738998887933799,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_rival",
+                  "score": 0.7929701148701513,
+                  "query_similarity": 0.5996607055928727,
+                  "active_profile_similarity": 0.9094949462461422,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan rivaled Semyon and competed with him over Anna."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_protect",
+                  "score": 0.7801925100613787,
+                  "query_similarity": 0.5626165936791812,
+                  "active_profile_similarity": 0.8914531110693747,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon protected Anna from a stranger and cared about her safety."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "query_structure_active_0.10",
+          "mean_next_hop_accuracy": 0.88,
+          "mean_next_hop_mrr": 0.93,
+          "mean_next_hop_ndcg_at_k": 0.9477014426086524,
+          "mean_path_recall_at_k": 1.0,
+          "mean_evidence_recall_at_k": 0.7599999999999999,
+          "mean_local_observation_recall_at_k": 0.7599999999999999,
+          "errors": [
+            {
+              "query": "Whose feelings caused conflict around Semyon?",
+              "selected_owner_id": "entity_ivan",
+              "selected_document_id": "doc_ivan_confront",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_confront",
+                  "score": 0.8020687271429899,
+                  "query_similarity": 0.6089245589325883,
+                  "active_profile_similarity": 0.8830400846176636,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan confronted Semyon after the dispute became open conflict."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7936204855035517,
+                  "query_similarity": 0.5833524684167771,
+                  "active_profile_similarity": 0.8761834021606995,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_jealous",
+                  "score": 0.7933043346031808,
+                  "query_similarity": 0.5824906714415086,
+                  "active_profile_similarity": 0.8752606611794227,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan was jealous of Semyon and challenged him."
+                }
+              ]
+            },
+            {
+              "query": "Where did Semyon go with the rifle?",
+              "selected_owner_id": "object_rifle",
+              "selected_document_id": "doc_rifle_weapon",
+              "top_candidates": [
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_weapon",
+                  "score": 0.8442428156247802,
+                  "query_similarity": 0.7424383995746114,
+                  "active_profile_similarity": 0.8762731467228859,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The rifle was Semyon's hunting weapon."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_carry",
+                  "score": 0.8241851943135625,
+                  "query_similarity": 0.6753199438197538,
+                  "active_profile_similarity": 0.9048346681601018,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon carried his rifle while entering the forest."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_protection",
+                  "score": 0.7533035461374953,
+                  "query_similarity": 0.4507291958496315,
+                  "active_profile_similarity": 0.9175736440774773,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The hunter used the weapon for protection."
+                }
+              ]
+            },
+            {
+              "query": "Who fought with Semyon over Anna?",
+              "selected_owner_id": "entity_anna",
+              "selected_document_id": "doc_anna_quarrel",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.8089773980890461,
+                  "query_similarity": 0.6319432670236623,
+                  "active_profile_similarity": 0.8738998887933799,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_rival",
+                  "score": 0.8003236311543749,
+                  "query_similarity": 0.5996607055928727,
+                  "active_profile_similarity": 0.9094949462461422,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan rivaled Semyon and competed with him over Anna."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_protect",
+                  "score": 0.7877167848556199,
+                  "query_similarity": 0.5626165936791812,
+                  "active_profile_similarity": 0.8914531110693747,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon protected Anna from a stranger and cared about her safety."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "query_structure_active_0.20",
+          "mean_next_hop_accuracy": 0.88,
+          "mean_next_hop_mrr": 0.93,
+          "mean_next_hop_ndcg_at_k": 0.9477014426086524,
+          "mean_path_recall_at_k": 1.0,
+          "mean_evidence_recall_at_k": 0.7599999999999999,
+          "mean_local_observation_recall_at_k": 0.7599999999999999,
+          "errors": [
+            {
+              "query": "Whose feelings caused conflict around Semyon?",
+              "selected_owner_id": "entity_ivan",
+              "selected_document_id": "doc_ivan_confront",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_confront",
+                  "score": 0.8136896700734768,
+                  "query_similarity": 0.6089245589325883,
+                  "active_profile_similarity": 0.8830400846176636,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan confronted Semyon after the dispute became open conflict."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.8056597534682849,
+                  "query_similarity": 0.5833524684167771,
+                  "active_profile_similarity": 0.8761834021606995,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_jealous",
+                  "score": 0.8053315009353919,
+                  "query_similarity": 0.5824906714415086,
+                  "active_profile_similarity": 0.8752606611794227,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan was jealous of Semyon and challenged him."
+                }
+              ]
+            },
+            {
+              "query": "Where did Semyon go with the rifle?",
+              "selected_owner_id": "object_rifle",
+              "selected_document_id": "doc_rifle_weapon",
+              "top_candidates": [
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_weapon",
+                  "score": 0.8520672954361688,
+                  "query_similarity": 0.7424383995746114,
+                  "active_profile_similarity": 0.8762731467228859,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The rifle was Semyon's hunting weapon."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_carry",
+                  "score": 0.8348712059607699,
+                  "query_similarity": 0.6753199438197538,
+                  "active_profile_similarity": 0.9048346681601018,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon carried his rifle while entering the forest."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_protection",
+                  "score": 0.770427152462599,
+                  "query_similarity": 0.4507291958496315,
+                  "active_profile_similarity": 0.9175736440774773,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The hunter used the weapon for protection."
+                }
+              ]
+            },
+            {
+              "query": "Who fought with Semyon over Anna?",
+              "selected_owner_id": "entity_anna",
+              "selected_document_id": "doc_anna_quarrel",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.8196417769480165,
+                  "query_similarity": 0.6319432670236623,
+                  "active_profile_similarity": 0.8738998887933799,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_rival",
+                  "score": 0.8131922846517663,
+                  "query_similarity": 0.5996607055928727,
+                  "active_profile_similarity": 0.9094949462461422,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan rivaled Semyon and competed with him over Anna."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_protect",
+                  "score": 0.8008842657455424,
+                  "query_similarity": 0.5626165936791812,
+                  "active_profile_similarity": 0.8914531110693747,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon protected Anna from a stranger and cared about her safety."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "query_structure_active_0.30",
+          "mean_next_hop_accuracy": 0.88,
+          "mean_next_hop_mrr": 0.93,
+          "mean_next_hop_ndcg_at_k": 0.9477014426086524,
+          "mean_path_recall_at_k": 1.0,
+          "mean_evidence_recall_at_k": 0.7733333333333333,
+          "mean_local_observation_recall_at_k": 0.7733333333333333,
+          "errors": [
+            {
+              "query": "Whose feelings caused conflict around Semyon?",
+              "selected_owner_id": "entity_ivan",
+              "selected_document_id": "doc_ivan_confront",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_confront",
+                  "score": 0.8235227756300425,
+                  "query_similarity": 0.6089245589325883,
+                  "active_profile_similarity": 0.8830400846176636,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan confronted Semyon after the dispute became open conflict."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.8158468263615206,
+                  "query_similarity": 0.5833524684167771,
+                  "active_profile_similarity": 0.8761834021606995,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_jealous",
+                  "score": 0.8155083339857242,
+                  "query_similarity": 0.5824906714415086,
+                  "active_profile_similarity": 0.8752606611794227,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan was jealous of Semyon and challenged him."
+                }
+              ]
+            },
+            {
+              "query": "Where did Semyon go with the rifle?",
+              "selected_owner_id": "object_rifle",
+              "selected_document_id": "doc_rifle_weapon",
+              "top_candidates": [
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_weapon",
+                  "score": 0.8586880091227282,
+                  "query_similarity": 0.7424383995746114,
+                  "active_profile_similarity": 0.8762731467228859,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The rifle was Semyon's hunting weapon."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_carry",
+                  "score": 0.8439132158160992,
+                  "query_similarity": 0.6753199438197538,
+                  "active_profile_similarity": 0.9048346681601018,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon carried his rifle while entering the forest."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_protection",
+                  "score": 0.7849163578146097,
+                  "query_similarity": 0.4507291958496315,
+                  "active_profile_similarity": 0.9175736440774773,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The hunter used the weapon for protection."
+                }
+              ]
+            },
+            {
+              "query": "Who fought with Semyon over Anna?",
+              "selected_owner_id": "entity_anna",
+              "selected_document_id": "doc_anna_quarrel",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.828665482136376,
+                  "query_similarity": 0.6319432670236623,
+                  "active_profile_similarity": 0.8738998887933799,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_rival",
+                  "score": 0.8240811453034053,
+                  "query_similarity": 0.5996607055928727,
+                  "active_profile_similarity": 0.9094949462461422,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan rivaled Semyon and competed with him over Anna."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_protect",
+                  "score": 0.8120259803447074,
+                  "query_similarity": 0.5626165936791812,
+                  "active_profile_similarity": 0.8914531110693747,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon protected Anna from a stranger and cared about her safety."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "query_structure_active_0.50",
+          "mean_next_hop_accuracy": 0.88,
+          "mean_next_hop_mrr": 0.93,
+          "mean_next_hop_ndcg_at_k": 0.9477014426086524,
+          "mean_path_recall_at_k": 1.0,
+          "mean_evidence_recall_at_k": 0.7733333333333333,
+          "mean_local_observation_recall_at_k": 0.7733333333333333,
+          "errors": [
+            {
+              "query": "Whose feelings caused conflict around Semyon?",
+              "selected_owner_id": "entity_ivan",
+              "selected_document_id": "doc_ivan_confront",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_confront",
+                  "score": 0.8392557445205479,
+                  "query_similarity": 0.6089245589325883,
+                  "active_profile_similarity": 0.8830400846176636,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan confronted Semyon after the dispute became open conflict."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.8321461429906979,
+                  "query_similarity": 0.5833524684167771,
+                  "active_profile_similarity": 0.8761834021606995,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_jealous",
+                  "score": 0.8317912668662558,
+                  "query_similarity": 0.5824906714415086,
+                  "active_profile_similarity": 0.8752606611794227,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan was jealous of Semyon and challenged him."
+                }
+              ]
+            },
+            {
+              "query": "Where did Semyon go with the rifle?",
+              "selected_owner_id": "object_rifle",
+              "selected_document_id": "doc_rifle_weapon",
+              "top_candidates": [
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_weapon",
+                  "score": 0.8692811510212236,
+                  "query_similarity": 0.7424383995746114,
+                  "active_profile_similarity": 0.8762731467228859,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The rifle was Semyon's hunting weapon."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_carry",
+                  "score": 0.8583804315846262,
+                  "query_similarity": 0.6753199438197538,
+                  "active_profile_similarity": 0.9048346681601018,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon carried his rifle while entering the forest."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_protection",
+                  "score": 0.808099086377827,
+                  "query_similarity": 0.4507291958496315,
+                  "active_profile_similarity": 0.9175736440774773,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The hunter used the weapon for protection."
+                }
+              ]
+            },
+            {
+              "query": "Who fought with Semyon over Anna?",
+              "selected_owner_id": "entity_anna",
+              "selected_document_id": "doc_anna_quarrel",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.8431034104377512,
+                  "query_similarity": 0.6319432670236623,
+                  "active_profile_similarity": 0.8738998887933799,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_rival",
+                  "score": 0.8415033223460274,
+                  "query_similarity": 0.5996607055928727,
+                  "active_profile_similarity": 0.9094949462461422,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan rivaled Semyon and competed with him over Anna."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_protect",
+                  "score": 0.8298527237033714,
+                  "query_similarity": 0.5626165936791812,
+                  "active_profile_similarity": 0.8914531110693747,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon protected Anna from a stranger and cared about her safety."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "active_profile_clusters": {
+        "same_label_mean_similarity": 0.9292369926852757,
+        "different_label_mean_similarity": 0.8953694807943688,
+        "separation_margin": 0.033867511890906865
+      }
+    },
+    {
+      "interaction_profile_mode": "contribution",
+      "navigation_modes": [
+        {
+          "mode": "query_cosine",
+          "mean_next_hop_accuracy": 0.88,
+          "mean_next_hop_mrr": 0.93,
+          "mean_next_hop_ndcg_at_k": 0.9477014426086524,
+          "mean_path_recall_at_k": 1.0,
+          "mean_evidence_recall_at_k": 0.7333333333333332,
+          "mean_local_observation_recall_at_k": 0.7333333333333332,
+          "errors": [
+            {
+              "query": "Whose feelings caused conflict around Semyon?",
+              "selected_owner_id": "entity_ivan",
+              "selected_document_id": "doc_ivan_confront",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_confront",
+                  "score": 0.8044622794662941,
+                  "query_similarity": 0.6089245589325883,
+                  "active_profile_similarity": 0.625556815661831,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan confronted Semyon after the dispute became open conflict."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7916762342083885,
+                  "query_similarity": 0.5833524684167771,
+                  "active_profile_similarity": 0.6345791304010984,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_jealous",
+                  "score": 0.7912453357207543,
+                  "query_similarity": 0.5824906714415086,
+                  "active_profile_similarity": 0.6299003986069276,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan was jealous of Semyon and challenged him."
+                }
+              ]
+            },
+            {
+              "query": "Where did Semyon go with the rifle?",
+              "selected_owner_id": "object_rifle",
+              "selected_document_id": "doc_rifle_weapon",
+              "top_candidates": [
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_weapon",
+                  "score": 0.8712191997873058,
+                  "query_similarity": 0.7424383995746114,
+                  "active_profile_similarity": 0.7428666256480204,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The rifle was Semyon's hunting weapon."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_carry",
+                  "score": 0.837659971909877,
+                  "query_similarity": 0.6753199438197538,
+                  "active_profile_similarity": 0.7623268112929399,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon carried his rifle while entering the forest."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_protection",
+                  "score": 0.7253645979248158,
+                  "query_similarity": 0.4507291958496315,
+                  "active_profile_similarity": 0.7296406015849615,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The hunter used the weapon for protection."
+                }
+              ]
+            },
+            {
+              "query": "Who fought with Semyon over Anna?",
+              "selected_owner_id": "entity_anna",
+              "selected_document_id": "doc_anna_quarrel",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.8159716335118312,
+                  "query_similarity": 0.6319432670236623,
+                  "active_profile_similarity": 0.6243404994087627,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_rival",
+                  "score": 0.7998303527964363,
+                  "query_similarity": 0.5996607055928727,
+                  "active_profile_similarity": 0.6775404743035914,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan rivaled Semyon and competed with him over Anna."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_protect",
+                  "score": 0.7813082968395906,
+                  "query_similarity": 0.5626165936791812,
+                  "active_profile_similarity": 0.6972980258592094,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon protected Anna from a stranger and cared about her safety."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "query_structure",
+          "mean_next_hop_accuracy": 0.88,
+          "mean_next_hop_mrr": 0.93,
+          "mean_next_hop_ndcg_at_k": 0.9477014426086524,
+          "mean_path_recall_at_k": 1.0,
+          "mean_evidence_recall_at_k": 0.7333333333333332,
+          "mean_local_observation_recall_at_k": 0.7333333333333332,
+          "errors": [
+            {
+              "query": "Whose feelings caused conflict around Semyon?",
+              "selected_owner_id": "entity_ivan",
+              "selected_document_id": "doc_ivan_confront",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_confront",
+                  "score": 0.7881235956264058,
+                  "query_similarity": 0.6089245589325883,
+                  "active_profile_similarity": 0.625556815661831,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan confronted Semyon after the dispute became open conflict."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7791733639458719,
+                  "query_similarity": 0.5833524684167771,
+                  "active_profile_similarity": 0.6345791304010984,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_jealous",
+                  "score": 0.7788717350045279,
+                  "query_similarity": 0.5824906714415086,
+                  "active_profile_similarity": 0.6299003986069276,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan was jealous of Semyon and challenged him."
+                }
+              ]
+            },
+            {
+              "query": "Where did Semyon go with the rifle?",
+              "selected_owner_id": "object_rifle",
+              "selected_document_id": "doc_rifle_weapon",
+              "top_candidates": [
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_weapon",
+                  "score": 0.8348534398511139,
+                  "query_similarity": 0.7424383995746114,
+                  "active_profile_similarity": 0.7428666256480204,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The rifle was Semyon's hunting weapon."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_carry",
+                  "score": 0.8113619803369138,
+                  "query_similarity": 0.6753199438197538,
+                  "active_profile_similarity": 0.7623268112929399,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon carried his rifle while entering the forest."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_protection",
+                  "score": 0.732755218547371,
+                  "query_similarity": 0.4507291958496315,
+                  "active_profile_similarity": 0.7296406015849615,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The hunter used the weapon for protection."
+                }
+              ]
+            },
+            {
+              "query": "Who fought with Semyon over Anna?",
+              "selected_owner_id": "entity_anna",
+              "selected_document_id": "doc_anna_quarrel",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7961801434582818,
+                  "query_similarity": 0.6319432670236623,
+                  "active_profile_similarity": 0.6243404994087627,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_rival",
+                  "score": 0.7848812469575054,
+                  "query_similarity": 0.5996607055928727,
+                  "active_profile_similarity": 0.6775404743035914,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan rivaled Semyon and competed with him over Anna."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_protect",
+                  "score": 0.7719158077877133,
+                  "query_similarity": 0.5626165936791812,
+                  "active_profile_similarity": 0.6972980258592094,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon protected Anna from a stranger and cared about her safety."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "query_structure_active_0.00",
+          "mean_next_hop_accuracy": 0.88,
+          "mean_next_hop_mrr": 0.93,
+          "mean_next_hop_ndcg_at_k": 0.9477014426086524,
+          "mean_path_recall_at_k": 1.0,
+          "mean_evidence_recall_at_k": 0.7333333333333332,
+          "mean_local_observation_recall_at_k": 0.7333333333333332,
+          "errors": [
+            {
+              "query": "Whose feelings caused conflict around Semyon?",
+              "selected_owner_id": "entity_ivan",
+              "selected_document_id": "doc_ivan_confront",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_confront",
+                  "score": 0.7881235956264058,
+                  "query_similarity": 0.6089245589325883,
+                  "active_profile_similarity": 0.625556815661831,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan confronted Semyon after the dispute became open conflict."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7791733639458719,
+                  "query_similarity": 0.5833524684167771,
+                  "active_profile_similarity": 0.6345791304010984,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_jealous",
+                  "score": 0.7788717350045279,
+                  "query_similarity": 0.5824906714415086,
+                  "active_profile_similarity": 0.6299003986069276,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan was jealous of Semyon and challenged him."
+                }
+              ]
+            },
+            {
+              "query": "Where did Semyon go with the rifle?",
+              "selected_owner_id": "object_rifle",
+              "selected_document_id": "doc_rifle_weapon",
+              "top_candidates": [
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_weapon",
+                  "score": 0.8348534398511139,
+                  "query_similarity": 0.7424383995746114,
+                  "active_profile_similarity": 0.7428666256480204,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The rifle was Semyon's hunting weapon."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_carry",
+                  "score": 0.8113619803369138,
+                  "query_similarity": 0.6753199438197538,
+                  "active_profile_similarity": 0.7623268112929399,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon carried his rifle while entering the forest."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_protection",
+                  "score": 0.732755218547371,
+                  "query_similarity": 0.4507291958496315,
+                  "active_profile_similarity": 0.7296406015849615,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The hunter used the weapon for protection."
+                }
+              ]
+            },
+            {
+              "query": "Who fought with Semyon over Anna?",
+              "selected_owner_id": "entity_anna",
+              "selected_document_id": "doc_anna_quarrel",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7961801434582818,
+                  "query_similarity": 0.6319432670236623,
+                  "active_profile_similarity": 0.6243404994087627,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_rival",
+                  "score": 0.7848812469575054,
+                  "query_similarity": 0.5996607055928727,
+                  "active_profile_similarity": 0.6775404743035914,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan rivaled Semyon and competed with him over Anna."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_protect",
+                  "score": 0.7719158077877133,
+                  "query_similarity": 0.5626165936791812,
+                  "active_profile_similarity": 0.6972980258592094,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon protected Anna from a stranger and cared about her safety."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "query_structure_active_0.05",
+          "mean_next_hop_accuracy": 0.88,
+          "mean_next_hop_mrr": 0.93,
+          "mean_next_hop_ndcg_at_k": 0.9477014426086524,
+          "mean_path_recall_at_k": 1.0,
+          "mean_evidence_recall_at_k": 0.7599999999999999,
+          "mean_local_observation_recall_at_k": 0.7599999999999999,
+          "errors": [
+            {
+              "query": "Whose feelings caused conflict around Semyon?",
+              "selected_owner_id": "entity_ivan",
+              "selected_document_id": "doc_ivan_confront",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_confront",
+                  "score": 0.789297634302811,
+                  "query_similarity": 0.6089245589325883,
+                  "active_profile_similarity": 0.625556815661831,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan confronted Semyon after the dispute became open conflict."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7809884211484756,
+                  "query_similarity": 0.5833524684167771,
+                  "active_profile_similarity": 0.6345791304010984,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_jealous",
+                  "score": 0.780589757114001,
+                  "query_similarity": 0.5824906714415086,
+                  "active_profile_similarity": 0.6299003986069276,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan was jealous of Semyon and challenged him."
+                }
+              ]
+            },
+            {
+              "query": "Where did Semyon go with the rifle?",
+              "selected_owner_id": "object_rifle",
+              "selected_document_id": "doc_rifle_weapon",
+              "top_candidates": [
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_weapon",
+                  "score": 0.836595338564109,
+                  "query_similarity": 0.7424383995746114,
+                  "active_profile_similarity": 0.7428666256480204,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The rifle was Semyon's hunting weapon."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_carry",
+                  "score": 0.8146858577326069,
+                  "query_similarity": 0.6753199438197538,
+                  "active_profile_similarity": 0.7623268112929399,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon carried his rifle while entering the forest."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_protection",
+                  "score": 0.7390440319876144,
+                  "query_similarity": 0.4507291958496315,
+                  "active_profile_similarity": 0.7296406015849615,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The hunter used the weapon for protection."
+                }
+              ]
+            },
+            {
+              "query": "Who fought with Semyon over Anna?",
+              "selected_owner_id": "entity_anna",
+              "selected_document_id": "doc_anna_quarrel",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7969415770890483,
+                  "query_similarity": 0.6319432670236623,
+                  "active_profile_similarity": 0.6243404994087627,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_rival",
+                  "score": 0.7874473893477096,
+                  "query_similarity": 0.5996607055928727,
+                  "active_profile_similarity": 0.6775404743035914,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan rivaled Semyon and competed with him over Anna."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_protect",
+                  "score": 0.7755697699373272,
+                  "query_similarity": 0.5626165936791812,
+                  "active_profile_similarity": 0.6972980258592094,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon protected Anna from a stranger and cared about her safety."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "query_structure_active_0.10",
+          "mean_next_hop_accuracy": 0.88,
+          "mean_next_hop_mrr": 0.93,
+          "mean_next_hop_ndcg_at_k": 0.9477014426086524,
+          "mean_path_recall_at_k": 1.0,
+          "mean_evidence_recall_at_k": 0.76,
+          "mean_local_observation_recall_at_k": 0.76,
+          "errors": [
+            {
+              "query": "Whose feelings caused conflict around Semyon?",
+              "selected_owner_id": "entity_ivan",
+              "selected_document_id": "doc_ivan_confront",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_confront",
+                  "score": 0.7903649421904521,
+                  "query_similarity": 0.6089245589325883,
+                  "active_profile_similarity": 0.625556815661831,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan confronted Semyon after the dispute became open conflict."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7826384731508426,
+                  "query_similarity": 0.5833524684167771,
+                  "active_profile_similarity": 0.6345791304010984,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_jealous",
+                  "score": 0.7821515953953402,
+                  "query_similarity": 0.5824906714415086,
+                  "active_profile_similarity": 0.6299003986069276,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan was jealous of Semyon and challenged him."
+                }
+              ]
+            },
+            {
+              "query": "Where did Semyon go with the rifle?",
+              "selected_owner_id": "object_rifle",
+              "selected_document_id": "doc_rifle_weapon",
+              "top_candidates": [
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_weapon",
+                  "score": 0.8381788828486499,
+                  "query_similarity": 0.7424383995746114,
+                  "active_profile_similarity": 0.7428666256480204,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The rifle was Semyon's hunting weapon."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_carry",
+                  "score": 0.8177075644559643,
+                  "query_similarity": 0.6753199438197538,
+                  "active_profile_similarity": 0.7623268112929399,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon carried his rifle while entering the forest."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_protection",
+                  "score": 0.7447611351151082,
+                  "query_similarity": 0.4507291958496315,
+                  "active_profile_similarity": 0.7296406015849615,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The hunter used the weapon for protection."
+                }
+              ]
+            },
+            {
+              "query": "Who fought with Semyon over Anna?",
+              "selected_owner_id": "entity_anna",
+              "selected_document_id": "doc_anna_quarrel",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7976337894806544,
+                  "query_similarity": 0.6319432670236623,
+                  "active_profile_similarity": 0.6243404994087627,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_rival",
+                  "score": 0.7897802460660772,
+                  "query_similarity": 0.5996607055928727,
+                  "active_profile_similarity": 0.6775404743035914,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan rivaled Semyon and competed with him over Anna."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_protect",
+                  "score": 0.7788915537097033,
+                  "query_similarity": 0.5626165936791812,
+                  "active_profile_similarity": 0.6972980258592094,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon protected Anna from a stranger and cared about her safety."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "query_structure_active_0.20",
+          "mean_next_hop_accuracy": 0.88,
+          "mean_next_hop_mrr": 0.93,
+          "mean_next_hop_ndcg_at_k": 0.9477014426086524,
+          "mean_path_recall_at_k": 1.0,
+          "mean_evidence_recall_at_k": 0.7733333333333333,
+          "mean_local_observation_recall_at_k": 0.7733333333333333,
+          "errors": [
+            {
+              "query": "Whose feelings caused conflict around Semyon?",
+              "selected_owner_id": "entity_ivan",
+              "selected_document_id": "doc_ivan_confront",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_confront",
+                  "score": 0.7922327309938241,
+                  "query_similarity": 0.6089245589325883,
+                  "active_profile_similarity": 0.625556815661831,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan confronted Semyon after the dispute became open conflict."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7855260641549848,
+                  "query_similarity": 0.5833524684167771,
+                  "active_profile_similarity": 0.6345791304010984,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_jealous",
+                  "score": 0.7848848123876838,
+                  "query_similarity": 0.5824906714415086,
+                  "active_profile_similarity": 0.6299003986069276,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan was jealous of Semyon and challenged him."
+                }
+              ]
+            },
+            {
+              "query": "Where did Semyon go with the rifle?",
+              "selected_owner_id": "object_rifle",
+              "selected_document_id": "doc_rifle_weapon",
+              "top_candidates": [
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_weapon",
+                  "score": 0.8409500853465967,
+                  "query_similarity": 0.7424383995746114,
+                  "active_profile_similarity": 0.7428666256480204,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The rifle was Semyon's hunting weapon."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_carry",
+                  "score": 0.8229955512218399,
+                  "query_similarity": 0.6753199438197538,
+                  "active_profile_similarity": 0.7623268112929399,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon carried his rifle while entering the forest."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_protection",
+                  "score": 0.7547660655882227,
+                  "query_similarity": 0.4507291958496315,
+                  "active_profile_similarity": 0.7296406015849615,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The hunter used the weapon for protection."
+                }
+              ]
+            },
+            {
+              "query": "Who fought with Semyon over Anna?",
+              "selected_owner_id": "entity_anna",
+              "selected_document_id": "doc_anna_quarrel",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7988451611659652,
+                  "query_similarity": 0.6319432670236623,
+                  "active_profile_similarity": 0.6243404994087627,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_rival",
+                  "score": 0.7938627453232204,
+                  "query_similarity": 0.5996607055928727,
+                  "active_profile_similarity": 0.6775404743035914,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan rivaled Semyon and competed with him over Anna."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_protect",
+                  "score": 0.7847046753113619,
+                  "query_similarity": 0.5626165936791812,
+                  "active_profile_similarity": 0.6972980258592094,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon protected Anna from a stranger and cared about her safety."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "query_structure_active_0.30",
+          "mean_next_hop_accuracy": 0.84,
+          "mean_next_hop_mrr": 0.91,
+          "mean_next_hop_ndcg_at_k": 0.9329386327515107,
+          "mean_path_recall_at_k": 1.0,
+          "mean_evidence_recall_at_k": 0.7733333333333333,
+          "mean_local_observation_recall_at_k": 0.7733333333333333,
+          "errors": [
+            {
+              "query": "Whose feelings caused conflict around Semyon?",
+              "selected_owner_id": "entity_ivan",
+              "selected_document_id": "doc_ivan_confront",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_confront",
+                  "score": 0.7938131676736002,
+                  "query_similarity": 0.6089245589325883,
+                  "active_profile_similarity": 0.625556815661831,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan confronted Semyon after the dispute became open conflict."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7879694103892589,
+                  "query_similarity": 0.5833524684167771,
+                  "active_profile_similarity": 0.6345791304010984,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_jealous",
+                  "score": 0.7871975344581283,
+                  "query_similarity": 0.5824906714415086,
+                  "active_profile_similarity": 0.6299003986069276,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan was jealous of Semyon and challenged him."
+                }
+              ]
+            },
+            {
+              "query": "Where did Semyon go with the rifle?",
+              "selected_owner_id": "object_rifle",
+              "selected_document_id": "doc_rifle_weapon",
+              "top_candidates": [
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_weapon",
+                  "score": 0.8432949489987055,
+                  "query_similarity": 0.7424383995746114,
+                  "active_profile_similarity": 0.7428666256480204,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The rifle was Semyon's hunting weapon."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_carry",
+                  "score": 0.8274700015621961,
+                  "query_similarity": 0.6753199438197538,
+                  "active_profile_similarity": 0.7623268112929399,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon carried his rifle while entering the forest."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_protection",
+                  "score": 0.7632317759885502,
+                  "query_similarity": 0.4507291958496315,
+                  "active_profile_similarity": 0.7296406015849615,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The hunter used the weapon for protection."
+                }
+              ]
+            },
+            {
+              "query": "Who fought with Semyon over Anna?",
+              "selected_owner_id": "entity_anna",
+              "selected_document_id": "doc_anna_quarrel",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7998701679766124,
+                  "query_similarity": 0.6319432670236623,
+                  "active_profile_similarity": 0.6243404994087627,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_rival",
+                  "score": 0.7973171677715722,
+                  "query_similarity": 0.5996607055928727,
+                  "active_profile_similarity": 0.6775404743035914,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan rivaled Semyon and competed with him over Anna."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_protect",
+                  "score": 0.7896234705127652,
+                  "query_similarity": 0.5626165936791812,
+                  "active_profile_similarity": 0.6972980258592094,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon protected Anna from a stranger and cared about her safety."
+                }
+              ]
+            },
+            {
+              "query": "Who confronted Semyon?",
+              "selected_owner_id": "entity_old_man",
+              "selected_document_id": "doc_old_man_ignored",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_old_man",
+                  "semantic_document_id": "doc_old_man_ignored",
+                  "score": 0.7817540689478468,
+                  "query_similarity": 0.5449339723547323,
+                  "active_profile_similarity": 0.6703559953869664,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon ignored the old man's warning and walked on."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_confront",
+                  "score": 0.7811203403272164,
+                  "query_similarity": 0.5537706642937992,
+                  "active_profile_similarity": 0.6442447328170118,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan confronted Semyon after the dispute became open conflict."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_weapon",
+                  "score": 0.7739387926123088,
+                  "query_similarity": 0.45067224282063567,
+                  "active_profile_similarity": 0.8225676360585268,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The rifle was Semyon's hunting weapon."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "query_structure_active_0.50",
+          "mean_next_hop_accuracy": 0.88,
+          "mean_next_hop_mrr": 0.92,
+          "mean_next_hop_ndcg_at_k": 0.9396913147887298,
+          "mean_path_recall_at_k": 1.0,
+          "mean_evidence_recall_at_k": 0.76,
+          "mean_local_observation_recall_at_k": 0.76,
+          "errors": [
+            {
+              "query": "Whose feelings caused conflict around Semyon?",
+              "selected_owner_id": "entity_ivan",
+              "selected_document_id": "doc_ivan_confront",
+              "top_candidates": [
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_confront",
+                  "score": 0.7963418663612424,
+                  "query_similarity": 0.6089245589325883,
+                  "active_profile_similarity": 0.625556815661831,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan confronted Semyon after the dispute became open conflict."
+                },
+                {
+                  "owner_id": "entity_anna",
+                  "semantic_document_id": "doc_anna_quarrel",
+                  "score": 0.7918787643640978,
+                  "query_similarity": 0.5833524684167771,
+                  "active_profile_similarity": 0.6345791304010984,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "After a quarrel, Semyon avoided Anna but kept thinking about her."
+                },
+                {
+                  "owner_id": "entity_ivan",
+                  "semantic_document_id": "doc_ivan_jealous",
+                  "score": 0.79089788977084,
+                  "query_similarity": 0.5824906714415086,
+                  "active_profile_similarity": 0.6299003986069276,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Ivan was jealous of Semyon and challenged him."
+                }
+              ]
+            },
+            {
+              "query": "Where did Semyon go with the rifle?",
+              "selected_owner_id": "object_rifle",
+              "selected_document_id": "doc_rifle_weapon",
+              "top_candidates": [
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_weapon",
+                  "score": 0.8470467308420794,
+                  "query_similarity": 0.7424383995746114,
+                  "active_profile_similarity": 0.7428666256480204,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The rifle was Semyon's hunting weapon."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_carry",
+                  "score": 0.8346291221067658,
+                  "query_similarity": 0.6753199438197538,
+                  "active_profile_similarity": 0.7623268112929399,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon carried his rifle while entering the forest."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_protection",
+                  "score": 0.7767769126290743,
+                  "query_similarity": 0.4507291958496315,
+                  "active_profile_similarity": 0.7296406015849615,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The hunter used the weapon for protection."
+                }
+              ]
+            },
+            {
+              "query": "Who confronted Semyon?",
+              "selected_owner_id": "object_rifle",
+              "selected_document_id": "doc_rifle_weapon",
+              "top_candidates": [
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_weapon",
+                  "score": 0.7922514626679028,
+                  "query_similarity": 0.45067224282063567,
+                  "active_profile_similarity": 0.8225676360585268,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "The rifle was Semyon's hunting weapon."
+                },
+                {
+                  "owner_id": "entity_old_man",
+                  "semantic_document_id": "doc_old_man_ignored",
+                  "score": 0.7888772594472653,
+                  "query_similarity": 0.5449339723547323,
+                  "active_profile_similarity": 0.6703559953869664,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon ignored the old man's warning and walked on."
+                },
+                {
+                  "owner_id": "object_rifle",
+                  "semantic_document_id": "doc_rifle_carry",
+                  "score": 0.7877263050776019,
+                  "query_similarity": 0.4549842626322383,
+                  "active_profile_similarity": 0.789379862780477,
+                  "structural_confidence": 0.5,
+                  "evidence_quality": 1.0,
+                  "novelty": 1.0,
+                  "text": "Semyon carried his rifle while entering the forest."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "active_profile_clusters": {
+        "same_label_mean_similarity": 0.7543002891012169,
+        "different_label_mean_similarity": 0.6407112505514794,
+        "separation_margin": 0.11358903854973756
+      }
+    }
+  ]
+}

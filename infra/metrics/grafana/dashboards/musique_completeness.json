@@ -1,0 +1,157 @@
+{
+  "title": "MuSiQue Evidence Completeness",
+  "uid": "musique-completeness",
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": true,
+  "time": { "from": "now-90d", "to": "now" },
+  "templating": {
+    "list": [
+      {
+        "name": "run_batch",
+        "type": "query",
+        "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+        "query": "SELECT DISTINCT run_batch FROM benchmark_metrics.musique_completeness ORDER BY run_batch",
+        "current": {},
+        "includeAll": false,
+        "multi": false,
+        "refresh": 1
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Evidence recall by arm",
+      "type": "barchart",
+      "gridPos": { "h": 9, "w": 8, "x": 0, "y": 0 },
+      "fieldConfig": {
+        "defaults": { "max": 1, "min": 0, "decimals": 3 },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+          "format": "table",
+          "rawSql": "SELECT arm_name, avg(evidence_recall) AS evidence_recall FROM benchmark_metrics.musique_completeness WHERE run_batch = '$run_batch' GROUP BY arm_name ORDER BY evidence_recall DESC"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Complete evidence coverage by arm",
+      "type": "barchart",
+      "gridPos": { "h": 9, "w": 8, "x": 8, "y": 0 },
+      "fieldConfig": {
+        "defaults": { "max": 1, "min": 0, "decimals": 3 },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+          "format": "table",
+          "rawSql": "SELECT arm_name, avg(complete_evidence_coverage) AS complete_coverage FROM benchmark_metrics.musique_completeness WHERE run_batch = '$run_batch' GROUP BY arm_name ORDER BY complete_coverage DESC"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Answer quality (RLM arm)",
+      "type": "stat",
+      "gridPos": { "h": 9, "w": 8, "x": 16, "y": 0 },
+      "fieldConfig": {
+        "defaults": { "max": 1, "min": 0, "decimals": 3 },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+          "format": "table",
+          "rawSql": "SELECT avg(answer_f1) AS answer_f1, avg(exact_match) AS exact_match FROM benchmark_metrics.musique_completeness WHERE run_batch = '$run_batch' AND answer_f1 IS NOT NULL"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Evidence recall by hop count",
+      "type": "barchart",
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 9 },
+      "fieldConfig": {
+        "defaults": { "max": 1, "min": 0, "decimals": 3 },
+        "overrides": []
+      },
+      "options": { "xField": "hops" },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+          "format": "table",
+          "rawSql": "SELECT hops::text AS hops, arm_name, avg(evidence_recall) AS recall FROM benchmark_metrics.musique_completeness WHERE run_batch = '$run_batch' GROUP BY hops, arm_name ORDER BY hops, arm_name"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "groupingToMatrix",
+          "options": {
+            "columnField": "arm_name",
+            "rowField": "hops",
+            "valueField": "recall"
+          }
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Complete coverage by hop count",
+      "type": "barchart",
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 9 },
+      "fieldConfig": {
+        "defaults": { "max": 1, "min": 0, "decimals": 3 },
+        "overrides": []
+      },
+      "options": { "xField": "hops" },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+          "format": "table",
+          "rawSql": "SELECT hops::text AS hops, arm_name, avg(complete_evidence_coverage) AS coverage FROM benchmark_metrics.musique_completeness WHERE run_batch = '$run_batch' GROUP BY hops, arm_name ORDER BY hops, arm_name"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "groupingToMatrix",
+          "options": {
+            "columnField": "arm_name",
+            "rowField": "hops",
+            "valueField": "coverage"
+          }
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Cost vs completeness",
+      "type": "table",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 18 },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+          "format": "table",
+          "rawSql": "SELECT arm_name, count(*) AS runs, round(avg(evidence_recall)::numeric, 3) AS recall, round(avg(complete_evidence_coverage)::numeric, 3) AS coverage, round(avg(retrieved_count)::numeric, 1) AS retrieved, round(avg(model_calls)::numeric, 1) AS model_calls, round(avg(total_tokens)::numeric, 0) AS tokens_per_case, round(avg(latency_ms)::numeric, 0) AS latency_ms FROM benchmark_metrics.musique_completeness WHERE run_batch = '$run_batch' GROUP BY arm_name ORDER BY coverage DESC"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Hardest cases (lowest RLM recall)",
+      "type": "table",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 18 },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "jmlc_metrics_postgres" },
+          "format": "table",
+          "rawSql": "SELECT task_id, hops, evidence_recall, complete_evidence_coverage, answer_f1, stop_reason FROM benchmark_metrics.musique_completeness WHERE run_batch = '$run_batch' AND arm_name = 'musique_graph_rlm' ORDER BY evidence_recall ASC, task_id LIMIT 30"
+        }
+      ]
+    }
+  ]
+}
