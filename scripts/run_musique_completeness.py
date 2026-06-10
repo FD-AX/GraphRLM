@@ -160,6 +160,9 @@ def build_arms(args: argparse.Namespace) -> list:
                     encoder_with(0.0),
                     model_name=args.rlm_model,
                     reasoning_effort=args.rlm_reasoning_effort,
+                    max_graph_model_calls=args.rlm_max_calls,
+                    max_graph_depth=args.rlm_max_depth,
+                    max_graph_expansions=args.rlm_max_expansions,
                     experiment_id=args.experiment_id,
                 )
             )
@@ -322,6 +325,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--active-weight", type=float, default=0.20)
     parser.add_argument("--rlm-model", default="gpt-5-mini")
     parser.add_argument("--rlm-reasoning-effort", default="low")
+    parser.add_argument("--rlm-max-calls", type=int, default=10)
+    parser.add_argument("--rlm-max-depth", type=int, default=5)
+    parser.add_argument("--rlm-max-expansions", type=int, default=6)
     parser.add_argument("--experiment-id", default=None)
     parser.add_argument("--output-dir", default="artifacts/musique_completeness")
     return parser.parse_args()

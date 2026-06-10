@@ -24,8 +24,12 @@ _ACTION_GUIDE = (
     "- reformulate: set subquery to a refined search lens for the next hop.\n"
     "- verify: re-check collected evidence (no movement).\n"
     "- answer: finish. Put the short final answer (just the entity/span, no "
-    "explanation) into decision_summary. Only answer when collected_evidence_ids "
-    "cover every hop of the question.\n"
+    "explanation) into decision_summary. BEFORE answering, decompose the "
+    "question into its chain of hops (e.g. 'X's performer' -> 'performer's "
+    "spouse' is 2 hops) and check that collected evidence contains a paragraph "
+    "for EVERY hop, including the intermediate bridge entities. Multi-hop "
+    "questions need one paragraph per hop - never answer from a single "
+    "paragraph unless the question is single-hop.\n"
     "- stop: give up (evidence cannot be completed).\n"
     "Strategy: hop through bridge paragraphs. After expanding to a paragraph "
     "that mentions the next bridge entity, expand again toward it. Prefer "
@@ -86,6 +90,23 @@ class MuSiQueGraphGateway(PydanticAIGPTGateway):
                     "decision_summary": (
                         decision.decision_summary
                         + " [sanitized: expand with empty frontier -> verify]"
+                    ),
+                }
+            )
+        if (
+            decision.action == "answer"
+            and len(set(state.get("collected_evidence_ids", []))) < 2
+            and state.get("remaining_model_calls", 0) > 1
+        ):
+            gap = decision.evidence_gap or state.get("current_subquery") or state.get("query")
+            return decision.model_copy(
+                update={
+                    "action": "reformulate",
+                    "subquery": gap,
+                    "decision_summary": (
+                        decision.decision_summary
+                        + " [sanitized: answer with <2 evidence paragraphs on a multi-hop "
+                        "question -> reformulate toward the evidence gap]"
                     ),
                 }
             )
