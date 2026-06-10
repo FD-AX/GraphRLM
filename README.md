@@ -25,14 +25,23 @@ tests live in [docs/benchmarks/musique_completeness/](docs/benchmarks/musique_co
 | Arm | Evidence recall | Complete coverage | Answer F1 | EM |
 | --- | ---: | ---: | ---: | ---: |
 | Keyword (lexical baseline) | 0.375 | 0.068 | — | — |
+| Cross-encoder, exhaustive matching | 0.600 | 0.206 | — | — |
 | Dense top-5 (no graph) | 0.586 | 0.210 | — | — |
 | Graph navigator | 0.623 | 0.298 | — | — |
 | Graph + interaction profile | 0.626 | 0.298 | — | — |
-| Graph-RLM discovery* | 0.816 | 0.628 | 0.615 | 0.516 |
+| Graph-RLM discovery* | 0.786 | 0.559 | 0.589 | 0.489 |
 
-\* Graph-RLM snapshot covers 277/500 cases (all 2-hop done, 3/4-hop tail in
+\* Graph-RLM snapshot covers 354/500 cases (all 2-hop done, 3/4-hop tail in
 progress) at ~28k tokens (~$0.012) per case; the table will be refreshed when
 the run completes.
+
+The cross-encoder baseline (`cross-encoder/ms-marco-MiniLM-L-6-v2`) scores
+every (question, paragraph) pair jointly - the upper bound of pure pairwise
+matching without graph structure. It matches dense retrieval on completeness
+(46W/48L paired, a wash): better matching of individual hops does not recover
+multi-hop evidence. Graph connectivity does: the navigator beats exhaustive
+cross-encoder matching +9.2 pp complete coverage (81W/35L), and graph-RLM
++28 pp (130W/33L).
 
 Paired per-case comparisons (sign tests): graph vs dense +8.8 pp complete
 coverage (52W/8L, p << 0.001); graph-RLM vs graph navigator +17.5 pp
