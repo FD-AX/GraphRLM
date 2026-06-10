@@ -40,6 +40,17 @@ _ACTION_GUIDE = (
 )
 
 
+_ACTION_GUIDE_V1 = _ACTION_GUIDE.replace(
+    "BEFORE answering, decompose the "
+    "question into its chain of hops (e.g. 'X's performer' -> 'performer's "
+    "spouse' is 2 hops) and check that collected evidence contains a paragraph "
+    "for EVERY hop, including the intermediate bridge entities. Multi-hop "
+    "questions need one paragraph per hop - never answer from a single "
+    "paragraph unless the question is single-hop.",
+    "Only answer when collected_evidence_ids cover every hop of the question.",
+)
+
+
 class MuSiQueGraphGateway(PydanticAIGPTGateway):
     """Task-tuned controller gateway with local decision sanitization.
 
@@ -47,13 +58,35 @@ class MuSiQueGraphGateway(PydanticAIGPTGateway):
     the action semantics for the paragraph-graph task and repairs the two
     failure modes observed in probes: expand without transition ids and
     inspect loops that burn the whole call budget.
+
+    Completeness guards are configurable so published v1 (no guards) and v2
+    (hop-chain prompt + min-2-evidence answer redirect) are reproducible:
+    `require_hop_chain` switches the answer instruction, `min_answer_evidence`
+    sets the evidence floor below which answer decisions are redirected.
     """
 
+    def __init__(
+        self,
+        *args,
+        require_hop_chain: bool = True,
+        min_answer_evidence: int = 2,
+        **kwargs,
+    ) -> None:
+        super().__init__(*args, **kwargs)
+        self.require_hop_chain = require_hop_chain
+        self.min_answer_evidence = min_answer_evidence
+
+    def _action_guide(self) -> str:
+        if self.require_hop_chain:
+            return _ACTION_GUIDE
+        return _ACTION_GUIDE_V1
+
     def decide_graph(self, state: GraphRLMState) -> GraphRLMDecision:
+        guide = self._action_guide()
         sections = _graph_prompt_sections(state)
-        sections["instruction"] = _ACTION_GUIDE
+        sections["instruction"] = guide
         prompt = (
-            f"{_ACTION_GUIDE}\n\n"
+            f"{guide}\n\n"
             f"State:\n{json.dumps(_jsonable_state(state), ensure_ascii=False, indent=2)}"
         )
         decision = self._call_model(
@@ -95,7 +128,7 @@ class MuSiQueGraphGateway(PydanticAIGPTGateway):
             )
         if (
             decision.action == "answer"
-            and len(set(state.get("collected_evidence_ids", []))) < 2
+            and len(set(state.get("collected_evidence_ids", []))) < self.min_answer_evidence
             and state.get("remaining_model_calls", 0) > 1
         ):
             gap = decision.evidence_gap or state.get("current_subquery") or state.get("query")

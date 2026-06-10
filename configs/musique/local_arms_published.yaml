@@ -1,0 +1,15 @@
+# Reproduces the local (no API key) arms of the published matrix:
+# keyword, cross-encoder, MDR-style variants, dense, graph navigator,
+# graph + interaction profile. Deterministic.
+dataset_split: validation
+hop_mix: "2:200,3:150,4:150"
+seed: 42
+arms: [keyword, cross, mdr, mdr_pooled, dense, graph, graph_active]
+backend: transformer
+top_k: 5
+seed_top_k: 3
+max_depth_navigator: 3
+beam_width: 3
+frontier_cap: 20
+active_weight: 0.20
+output_dir: artifacts/musique_local_published

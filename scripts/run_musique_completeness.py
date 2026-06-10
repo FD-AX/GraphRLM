@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
+from time import perf_counter
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
@@ -30,8 +34,53 @@ from app.semantic_encoding import (
 )
 
 
+CONFIG_KEY_TO_ARG = {
+    "dataset_split": "split",
+    "cases_file": "cases_file",
+    "hop_mix": "hop_mix",
+    "arms": "arms",
+    "backend": "backend",
+    "device": "device",
+    "top_k": "top_k",
+    "seed_top_k": "seed_top_k",
+    "max_depth_navigator": "max_depth",
+    "beam_width": "beam_width",
+    "frontier_cap": "frontier_cap",
+    "active_weight": "active_weight",
+    "controller_model": "rlm_model",
+    "controller_reasoning_effort": "rlm_reasoning_effort",
+    "max_model_calls": "rlm_max_calls",
+    "max_discovery_depth": "rlm_max_depth",
+    "max_expansions": "rlm_max_expansions",
+    "require_hop_chain": "rlm_require_hop_chain",
+    "min_answer_evidence": "rlm_min_answer_evidence",
+    "experiment_id": "experiment_id",
+    "output_dir": "output_dir",
+    "seed": "seed",
+}
+
+
+def apply_config(parser: argparse.ArgumentParser) -> argparse.Namespace:
+    bootstrap, _ = parser.parse_known_args()
+    if bootstrap.config:
+        import yaml
+
+        config = yaml.safe_load(Path(bootstrap.config).read_text(encoding="utf-8"))
+        defaults = {}
+        for key, value in config.items():
+            if key not in CONFIG_KEY_TO_ARG:
+                raise ValueError(f"Unknown config key: {key!r}")
+            if isinstance(value, list):
+                value = ",".join(str(item) for item in value)
+            defaults[CONFIG_KEY_TO_ARG[key]] = value
+        parser.set_defaults(**defaults)
+    return parser.parse_args()
+
+
 def main() -> None:
-    args = parse_args()
+    started = perf_counter()
+    parser = build_parser()
+    args = apply_config(parser)
     load_local_env(PROJECT_ROOT)
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -90,8 +139,82 @@ def main() -> None:
         json.dumps(summary, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
+    write_manifest(
+        args,
+        output_dir=output_dir,
+        case_count=len(cases),
+        records_path=records_path,
+        summary_path=summary_path,
+        duration_s=perf_counter() - started,
+    )
     print(json.dumps(summary["arms"], ensure_ascii=False, indent=2))
     print(f"Summary written to {summary_path}")
+
+
+def write_manifest(
+    args: argparse.Namespace,
+    *,
+    output_dir: Path,
+    case_count: int,
+    records_path: Path,
+    summary_path: Path,
+    duration_s: float,
+) -> None:
+    try:
+        commit_sha = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            capture_output=True,
+            text=True,
+            cwd=PROJECT_ROOT,
+            check=True,
+        ).stdout.strip()
+    except Exception:
+        commit_sha = None
+    config_hash = None
+    if args.config:
+        config_hash = hashlib.sha256(
+            Path(args.config).read_bytes()
+        ).hexdigest()[:16]
+    token_usage = {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}
+    with records_path.open("r", encoding="utf-8") as handle:
+        for line in handle:
+            line = line.strip()
+            if not line:
+                continue
+            record = json.loads(line)
+            for key in token_usage:
+                token_usage[key] += record.get(key) or 0
+    manifest = {
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "duration_s": round(duration_s, 1),
+        "commit_sha": commit_sha,
+        "config_path": args.config,
+        "config_sha256_16": config_hash,
+        "resolved_args": {
+            key: value for key, value in vars(args).items() if key != "config"
+        },
+        "dataset": {
+            "name": "dgslibisey/MuSiQue",
+            "split": args.split,
+            "hop_mix": args.hop_mix,
+            "selection": "deterministic_first_match_stratified",
+            "cases_file": args.cases_file,
+            "case_count": case_count,
+        },
+        "encoder": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+        if args.backend == "transformer"
+        else "hashing-256",
+        "controller_model": args.rlm_model if "rlm" in args.arms else None,
+        "token_usage": token_usage,
+        "records_path": str(records_path),
+        "summary_path": str(summary_path),
+    }
+    manifest_path = output_dir / "run_manifest.json"
+    manifest_path.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    print(f"Manifest written to {manifest_path}")
 
 
 def build_arms(args: argparse.Namespace) -> list:
@@ -166,15 +289,18 @@ def build_arms(args: argparse.Namespace) -> list:
                     beam_width=args.beam_width,
                 )
             )
-        elif name == "rlm":
+        elif name in ("rlm", "text_rlm"):
             arms.append(
                 MuSiQueGraphRLMArm(
                     encoder_with(0.0),
+                    frontier_source="dense" if name == "text_rlm" else "graph",
                     model_name=args.rlm_model,
                     reasoning_effort=args.rlm_reasoning_effort,
                     max_graph_model_calls=args.rlm_max_calls,
                     max_graph_depth=args.rlm_max_depth,
                     max_graph_expansions=args.rlm_max_expansions,
+                    require_hop_chain=args.rlm_require_hop_chain,
+                    min_answer_evidence=args.rlm_min_answer_evidence,
                     experiment_id=args.experiment_id,
                 )
             )
@@ -304,8 +430,14 @@ def summarize(records_path: Path) -> dict:
     return {"benchmark": "musique_completeness_v1", "arms": summary_arms}
 
 
-def parse_args() -> argparse.Namespace:
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--config",
+        default=None,
+        help="YAML config (configs/musique/*.yaml); CLI flags override it.",
+    )
+    parser.add_argument("--seed", type=int, default=42, help="Recorded in the manifest; case selection is deterministic.")
     parser.add_argument("--split", default="validation")
     parser.add_argument(
         "--cases-file",
@@ -340,9 +472,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--rlm-max-calls", type=int, default=10)
     parser.add_argument("--rlm-max-depth", type=int, default=5)
     parser.add_argument("--rlm-max-expansions", type=int, default=6)
+    parser.add_argument("--rlm-require-hop-chain", type=lambda v: str(v).lower() in {"1", "true", "yes"}, default=True)
+    parser.add_argument("--rlm-min-answer-evidence", type=int, default=2)
     parser.add_argument("--experiment-id", default=None)
     parser.add_argument("--output-dir", default="artifacts/musique_completeness")
-    return parser.parse_args()
+    return parser
 
 
 if __name__ == "__main__":

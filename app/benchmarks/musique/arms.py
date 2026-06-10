@@ -381,7 +381,12 @@ class MuSiQueGraphNavigatorArm:
 
 
 class MuSiQueGraphRLMArm:
-    """Full contour: graph index + model-driven discovery loop (GPT controller)."""
+    """Full contour: graph index + model-driven discovery loop (GPT controller).
+
+    With frontier_source="dense" the controller keeps the same actions,
+    budgets and guards but gets its frontier from dense search instead of
+    typed graph links (the budget-matched non-graph control arm).
+    """
 
     name: BenchmarkArmName = "musique_graph_rlm"
 
@@ -389,15 +394,21 @@ class MuSiQueGraphRLMArm:
         self,
         encoder: GraphSemanticEncoder,
         *,
+        frontier_source: str = "graph",
         model_name: str = "gpt-5-mini",
         reasoning_effort: str | None = "low",
         max_graph_model_calls: int = 10,
         max_graph_depth: int = 5,
         max_graph_expansions: int = 6,
         graph_top_k: int = 5,
+        require_hop_chain: bool = True,
+        min_answer_evidence: int = 2,
         experiment_id: str | None = None,
     ) -> None:
         self.encoder = encoder
+        self.frontier_source = frontier_source
+        if frontier_source == "dense":
+            self.name = "musique_text_rlm"
         self.model_name = model_name
         self.reasoning_effort = reasoning_effort
         self.config = DualRLMConfig(
@@ -406,10 +417,15 @@ class MuSiQueGraphRLMArm:
             max_graph_model_calls=max_graph_model_calls,
             max_graph_expansions=max_graph_expansions,
         )
+        self.require_hop_chain = require_hop_chain
+        self.min_answer_evidence = min_answer_evidence
         self.experiment_id = experiment_id
 
     def run_case(self, case: BenchmarkCase) -> BenchmarkArmResult:
-        from app.benchmarks.musique.discovery import MuSiQueDiscoveryArm
+        from app.benchmarks.musique.discovery import (
+            MuSiQueDiscoveryArm,
+            TextLedgerDiscoveryArm,
+        )
         from app.benchmarks.musique.gateway import MuSiQueGraphGateway
 
         started = perf_counter()
@@ -419,8 +435,15 @@ class MuSiQueGraphRLMArm:
             require_real_model=True,
             reasoning_effort=self.reasoning_effort,
             model_role="root",
+            require_hop_chain=self.require_hop_chain,
+            min_answer_evidence=self.min_answer_evidence,
         )
-        arm = MuSiQueDiscoveryArm(
+        discovery_cls = (
+            TextLedgerDiscoveryArm
+            if self.frontier_source == "dense"
+            else MuSiQueDiscoveryArm
+        )
+        arm = discovery_cls(
             index=index,
             graph_view=GraphViewRef(
                 document_id=f"musique_{case.task_id}",

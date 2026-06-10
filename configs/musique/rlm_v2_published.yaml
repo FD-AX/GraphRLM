@@ -1,0 +1,17 @@
+# Reproduces the published graph-RLM v2 row (run batch musique_500_v2).
+# Note: the gpt-5-mini controller is nondeterministic; expect small
+# variation around the published 0.872 recall / 0.700 complete coverage.
+dataset_split: validation
+hop_mix: "2:200,3:150,4:150"
+seed: 42
+arms: [rlm]
+backend: transformer
+top_k: 5
+controller_model: gpt-5-mini
+controller_reasoning_effort: low
+max_model_calls: 16
+max_discovery_depth: 8
+max_expansions: 12
+require_hop_chain: true
+min_answer_evidence: 2
+output_dir: artifacts/musique_rlm_v2_published

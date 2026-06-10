@@ -4,24 +4,116 @@ Versioned benchmark outputs. Raw run artifacts (full traces, model call
 logs) stay local under `artifacts/`; this directory keeps the compact,
 reproducible result sets.
 
-## musique_completeness/
+## musique_completeness/ - full statistical report
 
-MuSiQue (validation, stratified 2/3/4-hop) evidence-completeness
-comparison under an equal retrieval budget (top-5):
+MuSiQue (validation, stratified 200/150/150 by 2/3/4 hops, 500 cases)
+evidence-completeness comparison. Dataset: `dgslibisey/MuSiQue` via the HF
+datasets-server; case selection is deterministic (first match per hop
+bucket in row order). Encoder for all latent operations:
+`sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`. Controller
+for RLM arms: `gpt-5-mini`, reasoning effort `low`.
 
-- `summary.json` — per-arm aggregates, by-hop breakdown, paired
-  comparisons, run configuration.
-- `per_case_scores.json` — per (task, arm) metric rows used to build
-  the summary and the Grafana dashboard.
+Files:
 
-Reproduce: `python scripts/run_musique_completeness.py` (see flags),
-then `python scripts/export_musique_results.py`.
+- `summary.json` - per-arm aggregates, by-hop breakdown, paired
+  comparisons, run configuration (run batch `musique_500_v1`).
+- `per_case_scores.json` - per (task, arm) metric rows.
+- `rlm_budget_comparison.json` - v1 vs v2 controller budget ablation.
+- `mdr_anchor_sweep.json` - anchor-weight sweep of the untrained MDR-style
+  family.
+- `dense_budget_curve.json` - dense top-k coverage at k = 5, 7, 11
+  (budget-matched controls for the RLM evidence-set sizes).
+- `../musique_completeness_v2/` - v2 per-case rows and summary
+  (run batch `musique_500_v2`).
+
+### All paired sign tests (complete coverage / evidence recall)
+
+Shared-case sign tests; "W/L" = arm A wins/loses against arm B per case.
+
+| A vs B | Coverage W/L | Coverage diff | Recall W/L | Recall diff |
+| --- | ---: | ---: | ---: | ---: |
+| graph navigator vs dense top-5 | 52/8 | +8.8 pp | 68/31 | +3.7 pp |
+| graph+profile vs graph navigator | 1/1 | 0.0 | 9/2 | +0.3 pp |
+| cross-encoder vs dense top-5 | 46/48 | -0.4 pp | 128/119 | +1.4 pp |
+| MDR (latent+beam) vs dense top-5 | 29/24 | +1.0 pp | 59/118 | -4.7 pp |
+| graph navigator vs cross-encoder | 81/35 | +9.2 pp | 148/119 | +2.3 pp |
+| graph navigator vs MDR (latent+beam) | 63/24 | +7.8 pp | 146/55 | +8.5 pp |
+| graph-RLM v1 vs graph navigator | 129/31 | +19.6 pp | 212/57 | +14.8 pp |
+| graph-RLM v1 vs dense top-5 | 163/21 | +28.4 pp | 246/52 | +18.5 pp |
+| graph-RLM v1 vs cross-encoder | 179/35 | +28.8 pp | 246/71 | +17.1 pp |
+| graph-RLM v2 vs graph-RLM v1 | 131/28 | +20.6 pp | 160/41 | +10.1 pp |
+
+### The graph-free completeness plateau
+
+Three retrieval families with no training on the dataset, same encoder,
+same five-paragraph budget, all land on ~0.21 complete coverage:
+
+| Family | Recall | Coverage |
+| --- | ---: | ---: |
+| Dense top-5 (single-shot) | 0.586 | 0.210 |
+| Cross-encoder, exhaustive pairwise (`ms-marco-MiniLM-L-6-v2`) | 0.600 | 0.206 |
+| MDR-style re-querying, text concat | 0.538 | 0.208 |
+| MDR-style re-querying, latent pooling + beam 3 | 0.538 | 0.220 |
+
+The MDR-style family was swept over its query-anchor weight
+(`mdr_anchor_sweep.json`): at weight 1.0 the arm reproduces dense top-5
+exactly (0.5857/0.2100 - pipeline identity check), and any untrained
+passage influence trades recall away monotonically (0.586 -> 0.518 at
+w=0.5). The test-set-optimal point (w=0.7) reaches 0.226 coverage - still
+on the plateau. The original MDR's contribution is the *trained* query
+encoder; the untrained shape adds nothing over single-shot retrieval.
+
+### Budget-matched RLM controls
+
+Graph-RLM final evidence sets average 7.4 (v1) / 11.1 (v2) paragraphs.
+Dense retrieval at matched k (`dense_budget_curve.json`):
+
+| k | Dense recall | Dense coverage | RLM at ~k | RLM coverage |
+| ---: | ---: | ---: | --- | ---: |
+| 5 | 0.586 | 0.210 | - | - |
+| 7 | 0.683 | 0.332 | v1 (7.4) | 0.494 |
+| 11 | 0.819 | 0.534 | v2 (11.1) | 0.700 |
+
+At matched set size the discovery contour holds +16-17 pp coverage over
+dense in both regimes.
+
+### By-hop matrices (complete coverage)
+
+| Arm | 2-hop | 3-hop | 4-hop |
+| --- | ---: | ---: | ---: |
+| dense top-5 | 0.390 | 0.140 | 0.040 |
+| cross-encoder | 0.370 | 0.153 | 0.040 |
+| graph navigator | 0.550 | 0.200 | 0.060 |
+| graph-RLM v1 | 0.740 | 0.280 | 0.380 |
+| graph-RLM v2 | 0.885 | 0.460 | 0.693 |
+
+### Known limitations
+
+- Distractor setting (20 candidates per question), not open-corpus.
+- MDR-style arms are untrained replications of the algorithm shape with
+  our encoder; the published trained systems are not directly comparable.
+- The gpt-5-mini controller is nondeterministic; RLM numbers are
+  single-run. Local arms are deterministic.
+- External numbers (e.g. supervised Beam Retrieval 0.774,
+  arXiv:2308.08973) follow their own published protocols; comparisons are
+  directional only.
 
 ## frontier_ablation/
 
 Query-conditioned frontier ablation for the interaction-profile modes
 (`hashed_features` vs `contribution`) on the synthetic narrative graph:
 `scripts/smoke_query_conditioned_frontier.py`.
+
+## Reproduce
+
+```
+python scripts/run_musique_completeness.py --config configs/musique/local_arms_published.yaml
+python scripts/run_musique_completeness.py --config configs/musique/rlm_v2_published.yaml
+python scripts/export_musique_results.py
+```
+
+Each run writes a `run_manifest.json` (commit SHA, config hash, dataset
+selection, model, token usage, output paths) next to its records.
 
 ## Grafana
 
@@ -32,4 +124,6 @@ python ../../scripts/export_musique_results.py --postgres-dsn postgresql://jmlc:
 ```
 
 Grafana: http://localhost:3300 (admin/admin), dashboard
-"MuSiQue Evidence Completeness" in the JMLC folder.
+"MuSiQue Evidence Completeness" in the JMLC folder. Run batches
+(`musique_500_v1`, `musique_500_v2`) are switchable via the dashboard
+variable.

@@ -36,6 +36,7 @@ BenchmarkArmName = Literal[
     "musique_cross_encoder",
     "musique_mdr_iterative",
     "musique_mdr_pooled",
+    "musique_text_rlm",
     "musique_graph_navigator",
     "musique_graph_navigator_active",
     "musique_graph_rlm",

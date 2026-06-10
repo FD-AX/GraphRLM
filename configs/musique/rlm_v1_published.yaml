@@ -1,0 +1,16 @@
+# Reproduces the published graph-RLM v1 row (run batch musique_500_v1):
+# smaller controller budget, no completeness guards.
+dataset_split: validation
+hop_mix: "2:200,3:150,4:150"
+seed: 42
+arms: [rlm]
+backend: transformer
+top_k: 5
+controller_model: gpt-5-mini
+controller_reasoning_effort: low
+max_model_calls: 10
+max_discovery_depth: 5
+max_expansions: 6
+require_hop_chain: false
+min_answer_evidence: 0
+output_dir: artifacts/musique_rlm_v1_published
