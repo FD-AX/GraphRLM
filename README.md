@@ -29,11 +29,10 @@ tests live in [docs/benchmarks/musique_completeness/](docs/benchmarks/musique_co
 | Dense top-5 (no graph) | 0.586 | 0.210 | — | — |
 | Graph navigator | 0.623 | 0.298 | — | — |
 | Graph + interaction profile | 0.626 | 0.298 | — | — |
-| Graph-RLM discovery* | 0.786 | 0.559 | 0.589 | 0.489 |
+| Graph-RLM discovery | 0.771 | 0.494 | 0.573 | 0.470 |
 
-\* Graph-RLM snapshot covers 354/500 cases (all 2-hop done, 3/4-hop tail in
-progress) at ~28k tokens (~$0.012) per case; the table will be refreshed when
-the run completes.
+All arms cover the full 500 cases with zero errors. The graph-RLM arm spends
+~32k tokens (~$0.013, gpt-5-mini) per case; the whole 500-case run cost ~$6.
 
 The cross-encoder baseline (`cross-encoder/ms-marco-MiniLM-L-6-v2`) scores
 every (question, paragraph) pair jointly - the upper bound of pure pairwise
@@ -41,12 +40,14 @@ matching without graph structure. It matches dense retrieval on completeness
 (46W/48L paired, a wash): better matching of individual hops does not recover
 multi-hop evidence. Graph connectivity does: the navigator beats exhaustive
 cross-encoder matching +9.2 pp complete coverage (81W/35L), and graph-RLM
-+28 pp (130W/33L).
++28.8 pp (179W/35L).
 
-Paired per-case comparisons (sign tests): graph vs dense +8.8 pp complete
-coverage (52W/8L, p << 0.001); graph-RLM vs graph navigator +17.5 pp
-(65W/19L). The gap-closing effect grows with depth: on 4-hop cases the local
-graph reaches 0.06 complete coverage while the discovery loop reaches ~0.47.
+Paired per-case comparisons (sign tests, all p << 0.001 except the
+interaction-profile delta): graph vs dense +8.8 pp complete coverage
+(52W/8L); graph-RLM vs graph navigator +19.6 pp (129W/31L); graph-RLM vs
+dense +28.4 pp (163W/21L). The gap-closing effect grows with depth: on 4-hop
+cases the local graph reaches 0.06 complete coverage while the discovery
+loop reaches 0.38 (recall 0.49 -> 0.75).
 
 Scope note: this is the MuSiQue distractor setting (20 candidate paragraphs
 per question), not open-corpus retrieval. Within-matrix comparisons are

@@ -139,16 +139,16 @@
       }
     },
     "musique_graph_rlm": {
-      "runs": 354,
+      "runs": 500,
       "errors": 0,
-      "evidence_recall_mean": 0.7855,
-      "evidence_precision_mean": 0.3923,
-      "complete_evidence_coverage_mean": 0.5593,
-      "retrieved_count_mean": 6.9746,
-      "answer_f1_mean": 0.5894,
-      "exact_match_mean": 0.4887,
-      "latency_ms_mean": 40538.1667,
-      "total_tokens_sum": 10142862,
+      "evidence_recall_mean": 0.7708,
+      "evidence_precision_mean": 0.3901,
+      "complete_evidence_coverage_mean": 0.494,
+      "retrieved_count_mean": 7.426,
+      "answer_f1_mean": 0.5731,
+      "exact_match_mean": 0.47,
+      "latency_ms_mean": 43787.31,
+      "total_tokens_sum": 16136769,
       "by_hops": {
         "2": {
           "runs": 200,
@@ -157,16 +157,16 @@
           "answer_f1_mean": 0.689
         },
         "3": {
-          "runs": 138,
-          "evidence_recall_mean": 0.6691,
-          "complete_evidence_coverage_mean": 0.3043,
-          "answer_f1_mean": 0.47
+          "runs": 150,
+          "evidence_recall_mean": 0.6644,
+          "complete_evidence_coverage_mean": 0.28,
+          "answer_f1_mean": 0.479
         },
         "4": {
-          "runs": 16,
-          "evidence_recall_mean": 0.7656,
-          "complete_evidence_coverage_mean": 0.5,
-          "answer_f1_mean": 0.375
+          "runs": 150,
+          "evidence_recall_mean": 0.7483,
+          "complete_evidence_coverage_mean": 0.38,
+          "answer_f1_mean": 0.5128
         }
       }
     },
@@ -234,30 +234,30 @@
     },
     "musique_graph_rlm__vs__musique_graph_navigator": {
       "evidence_recall": {
-        "wins": 112,
-        "losses": 44,
-        "ties": 198,
-        "mean_diff": 0.0998
+        "wins": 212,
+        "losses": 57,
+        "ties": 231,
+        "mean_diff": 0.1478
       },
       "complete_evidence_coverage": {
-        "wins": 84,
-        "losses": 28,
-        "ties": 242,
-        "mean_diff": 0.1582
+        "wins": 129,
+        "losses": 31,
+        "ties": 340,
+        "mean_diff": 0.196
       }
     },
     "musique_graph_rlm__vs__musique_dense_topk": {
       "evidence_recall": {
-        "wins": 147,
-        "losses": 41,
-        "ties": 166,
-        "mean_diff": 0.1542
+        "wins": 246,
+        "losses": 52,
+        "ties": 202,
+        "mean_diff": 0.1852
       },
       "complete_evidence_coverage": {
-        "wins": 117,
-        "losses": 19,
-        "ties": 218,
-        "mean_diff": 0.2768
+        "wins": 163,
+        "losses": 21,
+        "ties": 316,
+        "mean_diff": 0.284
       }
     },
     "musique_cross_encoder__vs__musique_dense_topk": {
@@ -290,16 +290,16 @@
     },
     "musique_graph_rlm__vs__musique_cross_encoder": {
       "evidence_recall": {
-        "wins": 154,
-        "losses": 56,
-        "ties": 144,
-        "mean_diff": 0.1351
+        "wins": 246,
+        "losses": 71,
+        "ties": 183,
+        "mean_diff": 0.1708
       },
       "complete_evidence_coverage": {
-        "wins": 132,
-        "losses": 33,
-        "ties": 189,
-        "mean_diff": 0.2797
+        "wins": 179,
+        "losses": 35,
+        "ties": 286,
+        "mean_diff": 0.288
       }
     }
   }
