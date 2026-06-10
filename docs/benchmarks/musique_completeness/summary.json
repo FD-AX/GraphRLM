@@ -107,28 +107,28 @@
       }
     },
     "musique_graph_rlm": {
-      "runs": 121,
+      "runs": 277,
       "errors": 0,
-      "evidence_recall_mean": 0.8423,
-      "evidence_precision_mean": 0.3687,
-      "complete_evidence_coverage_mean": 0.6694,
-      "retrieved_count_mean": 7.6033,
-      "answer_f1_mean": 0.5896,
-      "exact_match_mean": 0.4711,
-      "latency_ms_mean": 44162.3223,
-      "total_tokens_sum": 3716526,
+      "evidence_recall_mean": 0.8162,
+      "evidence_precision_mean": 0.3905,
+      "complete_evidence_coverage_mean": 0.6282,
+      "retrieved_count_mean": 7.0505,
+      "answer_f1_mean": 0.6152,
+      "exact_match_mean": 0.5162,
+      "latency_ms_mean": 39894.4152,
+      "total_tokens_sum": 7684171,
       "by_hops": {
         "2": {
-          "runs": 91,
-          "evidence_recall_mean": 0.8901,
-          "complete_evidence_coverage_mean": 0.7802,
-          "answer_f1_mean": 0.6777
+          "runs": 200,
+          "evidence_recall_mean": 0.8675,
+          "complete_evidence_coverage_mean": 0.74,
+          "answer_f1_mean": 0.689
         },
         "3": {
-          "runs": 15,
-          "evidence_recall_mean": 0.6444,
-          "complete_evidence_coverage_mean": 0.2,
-          "answer_f1_mean": 0.3119
+          "runs": 62,
+          "evidence_recall_mean": 0.6667,
+          "complete_evidence_coverage_mean": 0.3065,
+          "answer_f1_mean": 0.4453
         },
         "4": {
           "runs": 15,
@@ -202,30 +202,30 @@
     },
     "musique_graph_rlm__vs__musique_graph_navigator": {
       "evidence_recall": {
-        "wins": 40,
-        "losses": 6,
-        "ties": 75,
-        "mean_diff": 0.1433
+        "wins": 85,
+        "losses": 28,
+        "ties": 164,
+        "mean_diff": 0.1047
       },
       "complete_evidence_coverage": {
-        "wins": 29,
-        "losses": 3,
-        "ties": 89,
-        "mean_diff": 0.2149
+        "wins": 69,
+        "losses": 22,
+        "ties": 186,
+        "mean_diff": 0.1697
       }
     },
     "musique_graph_rlm__vs__musique_dense_topk": {
       "evidence_recall": {
-        "wins": 53,
-        "losses": 7,
-        "ties": 61,
-        "mean_diff": 0.2004
+        "wins": 117,
+        "losses": 26,
+        "ties": 134,
+        "mean_diff": 0.1694
       },
       "complete_evidence_coverage": {
-        "wins": 43,
-        "losses": 3,
-        "ties": 75,
-        "mean_diff": 0.3306
+        "wins": 100,
+        "losses": 16,
+        "ties": 161,
+        "mean_diff": 0.3032
       }
     }
   }
