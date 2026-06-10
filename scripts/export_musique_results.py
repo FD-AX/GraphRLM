@@ -137,6 +137,9 @@ def build_summary(rows: list[dict], *, run_batch: str) -> dict:
         ("musique_graph_navigator_active", "musique_graph_navigator"),
         ("musique_graph_rlm", "musique_graph_navigator"),
         ("musique_graph_rlm", "musique_dense_topk"),
+        ("musique_cross_encoder", "musique_dense_topk"),
+        ("musique_graph_navigator", "musique_cross_encoder"),
+        ("musique_graph_rlm", "musique_cross_encoder"),
     ]
     for left, right in comparisons:
         if left not in indexed or right not in indexed:

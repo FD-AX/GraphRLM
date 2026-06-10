@@ -84,6 +84,68 @@ class MuSiQueDenseTopKArm:
         )
 
 
+class MuSiQueCrossEncoderArm:
+    """Exhaustive cross-encoder matching over all candidate paragraphs.
+
+    Scores every (question, paragraph) pair with a joint BERT pass - the
+    upper bound of pure pairwise matching without graph structure. A custom
+    score_fn can be injected for tests.
+    """
+
+    name: BenchmarkArmName = "musique_cross_encoder"
+
+    def __init__(
+        self,
+        model_name: str = "cross-encoder/ms-marco-MiniLM-L-6-v2",
+        top_k: int = 5,
+        device: str = "cpu",
+        score_fn=None,
+    ) -> None:
+        self.model_name = model_name
+        self.top_k = top_k
+        self.device = device
+        self._score_fn = score_fn
+
+    def _score(self, pairs: list[tuple[str, str]]) -> list[float]:
+        if self._score_fn is not None:
+            return self._score_fn(pairs)
+        if not hasattr(self, "_model"):
+            from sentence_transformers import CrossEncoder
+
+            self._model = CrossEncoder(self.model_name, device=self.device)
+        return [float(value) for value in self._model.predict(pairs)]
+
+    def run_case(self, case: BenchmarkCase) -> BenchmarkArmResult:
+        started = perf_counter()
+        paragraphs = case.metadata["paragraphs"]
+        pairs = [
+            (case.question, f"{paragraph['title']}. {paragraph['paragraph_text']}")
+            for paragraph in paragraphs
+        ]
+        scores = self._score(pairs)
+        ranked = sorted(
+            zip(paragraphs, scores),
+            key=lambda item: (-item[1], item[0]["idx"]),
+        )[: self.top_k]
+        evidence_ids = [f"para_{paragraph['idx']}" for paragraph, _ in ranked]
+        return BenchmarkArmResult(
+            prediction="",
+            evidence_span_ids=evidence_ids,
+            latency_ms=int((perf_counter() - started) * 1000),
+            stop_reason="retrieval_complete",
+            trace_id=f"musique_cross_encoder:{case.task_id}",
+            arm_input_hash=_hash_text(case.context),
+            trace=[
+                {
+                    "model": self.model_name,
+                    "top_k": self.top_k,
+                    "retrieved": evidence_ids,
+                    "scores": [round(score, 4) for _, score in ranked],
+                }
+            ],
+        )
+
+
 class MuSiQueGraphNavigatorArm:
     """Seeded dense search + structural frontier traversal with re-ranked output.
 

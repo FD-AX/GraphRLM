@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.benchmarks.models import BenchmarkCase
 from app.benchmarks.musique.arms import (
+    MuSiQueCrossEncoderArm,
     MuSiQueDenseTopKArm,
     MuSiQueGraphNavigatorArm,
     MuSiQueKeywordArm,
@@ -105,6 +106,22 @@ def test_arms_emit_evidence_and_scorer_reports_completeness() -> None:
             score.score_value for score in record.scores if score.score_name == "retrieved_count"
         )
         assert retrieved_count <= 2
+
+
+def test_cross_encoder_arm_ranks_by_injected_scores() -> None:
+    case = make_case()
+
+    def score_fn(pairs):
+        return [
+            2.0 if "Northstar" in passage or "bridge tower" in passage.lower() else -1.0
+            for _, passage in pairs
+        ]
+
+    arm = MuSiQueCrossEncoderArm(top_k=2, score_fn=score_fn)
+    result = arm.run_case(case)
+
+    assert set(result.evidence_span_ids) == {"para_0", "para_1"}
+    assert result.trace[0]["model"] == "cross-encoder/ms-marco-MiniLM-L-6-v2"
 
 
 def test_scorer_answer_metrics_use_aliases() -> None:

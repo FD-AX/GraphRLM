@@ -11,6 +11,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from app.core.local_env import load_local_env
 from app.benchmarks.musique.arms import (
+    MuSiQueCrossEncoderArm,
     MuSiQueDenseTopKArm,
     MuSiQueGraphNavigatorArm,
     MuSiQueGraphRLMArm,
@@ -121,6 +122,14 @@ def build_arms(args: argparse.Namespace) -> list:
     for name in arm_names:
         if name == "keyword":
             arms.append(MuSiQueKeywordArm(top_k=args.top_k))
+        elif name == "cross":
+            arms.append(
+                MuSiQueCrossEncoderArm(
+                    model_name=args.cross_encoder_model,
+                    top_k=args.top_k,
+                    device=args.device,
+                )
+            )
         elif name == "dense":
             arms.append(MuSiQueDenseTopKArm(encoder_with(0.0), top_k=args.top_k))
         elif name == "graph":
@@ -297,7 +306,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--arms",
         default="keyword,dense,graph,graph_active",
-        help="Comma list: keyword,dense,graph,graph_active,rlm",
+        help="Comma list: keyword,cross,dense,graph,graph_active,rlm",
+    )
+    parser.add_argument(
+        "--cross-encoder-model",
+        default="cross-encoder/ms-marco-MiniLM-L-6-v2",
     )
     parser.add_argument("--backend", choices=["transformer", "hashing"], default="transformer")
     parser.add_argument("--device", default="cpu")
