@@ -146,6 +146,55 @@ class MuSiQueCrossEncoderArm:
         )
 
 
+class MuSiQueMDRIterativeArm:
+    """MDR-style iterative dense retrieval (Xiong et al., ICLR 2021 shape).
+
+    Hop t re-encodes the query as (question + previously selected passage)
+    and retrieves the next-best unvisited paragraph by cosine. No graph
+    structure - isolates what iterative latent re-querying alone achieves
+    with the same encoder and the same top-k evidence budget.
+    """
+
+    name: BenchmarkArmName = "musique_mdr_iterative"
+
+    def __init__(self, encoder: GraphSemanticEncoder, top_k: int = 5) -> None:
+        self.encoder = encoder
+        self.top_k = top_k
+
+    def run_case(self, case: BenchmarkCase) -> BenchmarkArmResult:
+        started = perf_counter()
+        index = build_musique_semantic_index(case, self.encoder)
+        selected: list[str] = []
+        hops = []
+        query_text = case.question
+        for _ in range(self.top_k):
+            query_embedding = self.encoder.encode_query(query_text)
+            results = index.search(
+                query_embedding,
+                top_k=1,
+                visited_document_ids=set(selected),
+            )
+            if not results:
+                break
+            best = results[0]
+            selected.append(best.semantic_document_id)
+            hops.append({"owner_id": best.owner_id, "score": round(best.score, 4)})
+            passage = index.document_for(best.semantic_document_id).text
+            query_text = f"{case.question} {passage}"
+        evidence_ids = [
+            index.document_for(document_id).owner_id for document_id in selected
+        ]
+        return BenchmarkArmResult(
+            prediction="",
+            evidence_span_ids=evidence_ids,
+            latency_ms=int((perf_counter() - started) * 1000),
+            stop_reason="retrieval_complete",
+            trace_id=f"musique_mdr_iterative:{case.task_id}",
+            arm_input_hash=_hash_text(case.context),
+            trace=[{"top_k": self.top_k, "hops": hops}],
+        )
+
+
 class MuSiQueGraphNavigatorArm:
     """Seeded dense search + structural frontier traversal with re-ranked output.
 

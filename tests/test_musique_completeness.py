@@ -6,6 +6,7 @@ from app.benchmarks.musique.arms import (
     MuSiQueDenseTopKArm,
     MuSiQueGraphNavigatorArm,
     MuSiQueKeywordArm,
+    MuSiQueMDRIterativeArm,
 )
 from app.benchmarks.musique.graph import build_musique_semantic_documents
 from app.benchmarks.musique.loader import musique_case_from_record, MuSiQueSource
@@ -106,6 +107,16 @@ def test_arms_emit_evidence_and_scorer_reports_completeness() -> None:
             score.score_value for score in record.scores if score.score_name == "retrieved_count"
         )
         assert retrieved_count <= 2
+
+
+def test_mdr_iterative_arm_collects_distinct_paragraphs_per_hop() -> None:
+    case = make_case()
+    arm = MuSiQueMDRIterativeArm(make_encoder(), top_k=3)
+    result = arm.run_case(case)
+
+    assert len(result.evidence_span_ids) == 3
+    assert len(set(result.evidence_span_ids)) == 3
+    assert len(result.trace[0]["hops"]) == 3
 
 
 def test_cross_encoder_arm_ranks_by_injected_scores() -> None:
