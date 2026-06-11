@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>GraphRLM — презентация проекта</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Segoe UI", system-ui, sans-serif; background: #11151c; color: #e8eaf0; overflow: hidden; }
+  .slide { display: none; width: 100vw; height: 100vh; padding: 6vh 8vw; flex-direction: column; justify-content: center; }
+  .slide.active { display: flex; }
+  h1 { font-size: 3.2em; margin-bottom: 0.4em; color: #7cc4ff; }
+  h2 { font-size: 2.1em; margin-bottom: 0.8em; color: #7cc4ff; border-bottom: 2px solid #2a3answer44; padding-bottom: 0.3em; }
+  h3 { font-size: 1.2em; color: #9adbb4; margin: 0.7em 0 0.3em; }
+  p, li { font-size: 1.25em; line-height: 1.55; }
+  ul { margin-left: 1.2em; margin-top: 0.4em; }
+  li { margin-bottom: 0.45em; }
+  .tagline { font-size: 1.6em; color: #9adbb4; font-style: italic; margin: 0.6em 0; }
+  .muted { color: #8b93a7; font-size: 1em; }
+  .big { font-size: 1.9em; color: #ffd479; font-weight: 600; }
+  table { border-collapse: collapse; margin: 0.8em 0; width: 100%; }
+  th, td { border: 1px solid #2a3344; padding: 0.45em 0.8em; font-size: 1.05em; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  th { background: #1b2230; color: #7cc4ff; }
+  .hl { background: #20301f; color: #b6f0c0; font-weight: 600; }
+  .warn { color: #ffb38a; }
+  .footer { position: fixed; bottom: 2vh; right: 3vw; color: #5a6378; font-size: 0.9em; }
+  .cols { display: flex; gap: 4vw; }
+  .cols > div { flex: 1; }
+  code { background: #1b2230; padding: 0.1em 0.4em; border-radius: 4px; color: #ffd479; font-size: 0.9em; }
+</style>
+</head>
+<body>
+
+<!-- 1 -->
+<section class="slide active">
+  <h1>GraphRLM</h1>
+  <p class="tagline">«Граф проверяет полноту. RLM закрывает пробелы в доказательствах.»</p>
+  <p>Типизированный research-runtime для аудита полноты доказательств<br>
+  и целевого рекурсивного поиска недостающих свидетельств.</p>
+  <p class="muted" style="margin-top:2em">github.com/FD-AX/GraphRLM &nbsp;•&nbsp; июнь 2026</p>
+</section>
+
+<!-- 2 -->
+<section class="slide">
+  <h2>Проблема</h2>
+  <ul>
+    <li>LLM выдаёт <b>правдоподобный вердикт</b>, даже когда собранные доказательства неполны.</li>
+    <li>Точность ответа и <b>полнота доказательной базы</b> — разные вопросы; стандартные метрики (EM/F1) меряют только первое.</li>
+    <li><span class="warn">False completion</span> — система считает дело закрытым, не собрав всю цепочку — главный невидимый режим отказа RAG-систем.</li>
+  </ul>
+  <h3>Постановка GraphRLM</h3>
+  <p>Полнота доказательств — первоклассная задача: система обязана знать,
+  <b>чего она ещё не знает</b>, и не давать вердикт без полного набора.</p>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <h2>Архитектура</h2>
+  <div class="cols">
+    <div>
+      <h3>1. Графовый слой (BERT, без обучения)</h3>
+      <ul>
+        <li>Узлы и связи графа вербализуются и кодируются одним энкодером (multilingual MiniLM)</li>
+        <li>Типизированные связи: сущности, события, evidence-споты, <b>слоты недостающих доказательств</b></li>
+        <li>Аудит полноты — дёшево, без LLM</li>
+      </ul>
+    </div>
+    <div>
+      <h3>2. RLM discovery (gap-driven)</h3>
+      <ul>
+        <li>LLM-контроллер запускается <b>только когда аудит нашёл пробел</b></li>
+        <li>Действия: expand / reformulate (поиск-прыжок) / verify / answer</li>
+        <li>Гарды полноты: декомпозиция на хопы, минимум свидетельств до ответа</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide">
+  <h2>Бенчмарк: MuSiQue evidence completeness</h2>
+  <ul>
+    <li><b>500 кейсов</b> валидации, стратифицированы 200/150/150 по 2/3/4 хопам; 20 параграфов-кандидатов на вопрос, gold-цепочка supporting-параграфов.</li>
+    <li><b>Complete coverage</b> = 1, только если найдены <i>все</i> gold-параграфы кейса. Плюс evidence recall, answer F1/EM.</li>
+    <li>Равный бюджет извлечения (top-5) для всех локальных армов; один энкодер на всех.</li>
+    <li>Воспроизводимость: версионируемые конфиги, run-манифесты (commit SHA, хеши, токены), покейсовые JSON в репо, дашборды Grafana.</li>
+  </ul>
+</section>
+
+<!-- 5 -->
+<section class="slide">
+  <h2>Результат 1: плато безграфовых методов</h2>
+  <table>
+    <tr><th>Метод (top-5, без обучения)</th><th>Recall</th><th>Coverage</th></tr>
+    <tr><td>Лексический поиск</td><td>0.375</td><td>0.068</td></tr>
+    <tr><td>Dense bi-encoder</td><td>0.586</td><td>0.210</td></tr>
+    <tr><td>Cross-encoder — исчерпывающий матчинг всех пар</td><td>0.600</td><td>0.206</td></tr>
+    <tr><td>MDR-style итеративный re-querying (+ развёртка семейства)</td><td>0.538</td><td>0.208–0.226</td></tr>
+    <tr class="hl"><td>Граф-навигатор (та же модель, те же 5 параграфов)</td><td>0.623</td><td>0.298</td></tr>
+  </table>
+  <p>Всё «хождение по косинусам» — одношаговое, исчерпывающее, итеративное — упирается в
+  <b>плато полноты ~0.21</b>. Связанность пробивает его без единого LLM-вызова: +8.8 п.п. (52W/8L, p&nbsp;&lt;&lt;&nbsp;0.001).</p>
+</section>
+
+<!-- 6 -->
+<section class="slide">
+  <h2>Почему плато — фундаментально</h2>
+  <ul>
+    <li>Параграфы дальних хопов <b>не похожи на вопрос</b> — ни лексически, ни в эмбеддинге. Идеальный матчинг это не лечит: cross-encoder с неограниченным парным сравнением = dense (46W/48L, ничья).</li>
+    <li>Необученное обновление запроса (MDR-форма) монотонно жертвует recall: развёртка anchor-веса 1.0&nbsp;→&nbsp;0.5 даёт 0.586&nbsp;→&nbsp;0.518 (при 1.0 — точная копия dense, проверка пайплайна).</li>
+    <li>Достают их только <b>мосты</b>: типизированные связи через bridge-сущности между параграфами — то, чего нет в векторе вопроса.</li>
+  </ul>
+  <p class="big" style="margin-top:0.5em">Полноту даёт связанность, а не качество сравнения.</p>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <h2>Результат 2: discovery-контур закрывает пробелы</h2>
+  <table>
+    <tr><th>Complete coverage</th><th>2-hop</th><th>3-hop</th><th>4-hop</th><th>все</th></tr>
+    <tr><td>Граф-навигатор (локальный)</td><td>0.550</td><td>0.200</td><td>0.060</td><td>0.298</td></tr>
+    <tr><td>Graph-RLM v1 (10 вызовов)</td><td>0.740</td><td>0.280</td><td>0.380</td><td>0.494</td></tr>
+    <tr class="hl"><td>Graph-RLM v2 (16 вызовов + гарды)</td><td>0.885</td><td>0.460</td><td>0.693</td><td>0.700</td></tr>
+  </table>
+  <ul>
+    <li>v1→v2 на тех же кейсах: <b>+20.6 п.п.</b> coverage (131W/28L); answer EM 0.52.</li>
+    <li>Чем глубже цепочка — тем больше вклад discovery: 4-hop 0.06&nbsp;→&nbsp;0.69.</li>
+    <li>Budget-matched контроль: при равном размере набора (7 / 11 параграфов) контур держит <b>+16–17 п.п.</b> над dense — выигрыш от целевого поиска, а не от объёма.</li>
+  </ul>
+</section>
+
+<!-- 8 -->
+<section class="slide">
+  <h2>Честная аблация: а нужен ли граф контроллеру?</h2>
+  <table>
+    <tr><th>Система (тот же контроллер и бюджет)</th><th>Coverage</th><th>F1</th><th>Токенов/кейс</th></tr>
+    <tr><td>text-RLM — dense-фронтир, без графа</td><td>0.850</td><td>0.571</td><td>~121k</td></tr>
+    <tr class="hl"><td>graph-RLM — типизированный фронтир</td><td>0.733</td><td>0.621</td><td>~68k</td></tr>
+  </table>
+  <ul>
+    <li>При 20 кандидатах контроллер видит <b>весь пул каждый шаг</b> — и пробивает плато без графа (дороже на ×1.8 и с худшими ответами).</li>
+    <li>Граф здесь покупает <b>эффективность и точность ответов</b>, а не полноту.</li>
+    <li class="warn">«Показать всё» не существует на открытом корпусе — дистракторный сеттинг систематически занижает ценность графа. Open-corpus — следующий эксперимент.</li>
+  </ul>
+</section>
+
+<!-- 9 -->
+<section class="slide">
+  <h2>Позиционирование</h2>
+  <table>
+    <tr><th>Система</th><th>Coverage</th><th>Answer EM</th><th>Обучение на MuSiQue</th><th>Цена/кейс</th></tr>
+    <tr><td>LLM-бейзлайны (Gemini, лит. данные)</td><td>—</td><td>~0.37</td><td>нет</td><td>—</td></tr>
+    <tr class="hl"><td><b>GraphRLM v2</b></td><td>0.700</td><td>0.522</td><td><b>нет</b></td><td>$0.025</td></tr>
+    <tr><td>Beam Retrieval (supervised, свой протокол)*</td><td>0.774</td><td>—</td><td>да</td><td>~0</td></tr>
+  </table>
+  <p class="muted">* Внешние числа — только направление: протоколы оценки не идентичны.</p>
+  <p>Ниша: <b>completeness-first</b> постановка, гарантия отсутствия false completion,
+  gap-driven экономика (дорогой цикл — только по триггеру дешёвого аудита).</p>
+</section>
+
+<!-- 10 -->
+<section class="slide">
+  <h2>Инженерная база</h2>
+  <div class="cols">
+    <div>
+      <ul>
+        <li>Типизированный рантайм: Pydantic-модели, 71 тест</li>
+        <li>Провенанс эмбеддингов: энкодер, токенайзер, пулинг, хеши контента</li>
+        <li>Чекпоинты и шардирование прогонов (5 параллельных потоков, резюмирование)</li>
+      </ul>
+    </div>
+    <div>
+      <ul>
+        <li>Конфиги опубликованных строк + run-манифесты (commit SHA, хеш конфига, токены)</li>
+        <li>Результаты — JSON в репозитории, покейсово</li>
+        <li>Grafana + PostgreSQL: дашборд полноты, переключение прогонов v1/v2</li>
+      </ul>
+    </div>
+  </div>
+  <p style="margin-top:0.8em">Весь бенчмарк (6 армов × 500 кейсов + 4 аблации): <b>~$21</b> и два дня работы.</p>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <h2>Что дальше</h2>
+  <ul>
+    <li><b>Open-corpus реплика</b>: общий индекс 10 000 параграфов вместо 20 кандидатов — режим, где «показать всё» невозможно и структурный фронтир обязателен. Решающий тест ценности графа.</li>
+    <li><b>Прямое сравнение с ToG-3 / HippoRAG-2</b> на одних кейсах по трём осям: полнота, false-completion rate, стоимость на кейс.</li>
+    <li><b>Обученная проекция</b> связей по типам отношений — поднять полноту локального слоя без контроллера.</li>
+    <li>Векторизация поиска (numpy/FAISS) под корпусные масштабы.</li>
+  </ul>
+</section>
+
+<!-- 12 -->
+<section class="slide">
+  <h1 style="font-size:2.4em">Итог</h1>
+  <ul style="margin-top:0.5em">
+    <li>Полнота доказательств — измеримая, отдельная от точности задача, и мы построили для неё <b>воспроизводимый бенчмарк</b> с парной статистикой.</li>
+    <li><b>Без контроллера</b> графовая связанность — единственный training-free механизм, пробивающий плато полноты (0.21&nbsp;→&nbsp;0.30).</li>
+    <li><b>С контроллером</b> gap-driven контур достигает 0.70 zero-shot — рядом с supervised SOTA; граф даёт ×1.8 экономию и точность ответов.</li>
+    <li>Каждая цифра — с парным тестом, конфигом и манифестом. Границы метода найдены и опубликованы нами самими.</li>
+  </ul>
+  <p class="tagline" style="margin-top:1em">«Graph verifies completeness. RLM closes evidence gaps.»</p>
+</section>
+
+<div class="footer"><span id="counter">1 / 12</span> &nbsp;·&nbsp; ← → для навигации</div>
+
+<script>
+  const slides = document.querySelectorAll(".slide");
+  let current = 0;
+  function show(index) {
+    slides[current].classList.remove("active");
+    current = Math.max(0, Math.min(slides.length - 1, index));
+    slides[current].classList.add("active");
+    document.getElementById("counter").textContent = (current + 1) + " / " + slides.length;
+  }
+  document.addEventListener("keydown", (event) => {
+    if (["ArrowRight", "PageDown", " "].includes(event.key)) show(current + 1);
+    if (["ArrowLeft", "PageUp"].includes(event.key)) show(current - 1);
+    if (event.key === "Home") show(0);
+    if (event.key === "End") show(slides.length - 1);
+  });
+  document.addEventListener("click", () => show(current + 1));
+</script>
+</body>
+</html>
