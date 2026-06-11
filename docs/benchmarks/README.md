@@ -102,14 +102,18 @@ paired against graph-RLM v2 on the same cases
 | text-RLM (dense frontier) | 0.953 | 0.850 | 0.571 | 0.450 | 11.4 | ~121k |
 | graph-RLM v2 (typed frontier) | 0.893 | 0.733 | 0.621 | 0.500 | 12.2 | ~68k |
 
-Paired: coverage 4W/11L/45T against the graph (marginal at n=60), answer
-F1 10W/9L/41T for the graph. Interpretation: with only 20 candidates the
-dense frontier re-presents the entire re-ranked pool at every step, so the
-controller can reach completeness without graph state - at 1.8x the token
-cost and with worse answers. Typed graph state contributes efficiency and
-answer precision in this setting; its completeness contribution is
-expected to appear where exhaustive re-presentation is impossible
-(open corpus), which this benchmark cannot measure.
+Paired: coverage 4W/11L/45T against the graph (marginal at n=60); answer
+F1 10W/9L/41T for the graph (not significant). Pool-composition check:
+text-RLM evidence precision is actually higher (0.379 vs 0.294, ~8.7 vs
+~9.7 off-gold paragraphs per case), so the F1 delta is not explained by a
+noisier text pool and should be treated as noise until a larger control
+run. Interpretation: with only 20 candidates the dense frontier
+re-presents the entire re-ranked pool at every step, so the controller can
+reach completeness without graph state - at 1.8x the token cost. The
+demonstrated contribution of typed graph state in this setting is token
+efficiency; its completeness contribution is expected to appear where
+exhaustive re-presentation is impossible (open corpus), which this
+benchmark cannot measure.
 
 ### Known limitations
 

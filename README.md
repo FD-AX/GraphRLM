@@ -108,10 +108,11 @@ and guards; frontier from dense search with typed-link metadata stripped)
 was run on a stratified 60-case subset. It reaches *higher* completeness
 than graph-RLM (0.850 vs 0.733 coverage paired on shared cases, 11L/4W for
 graph, marginal at n=60) at **1.8x the token cost** (121k vs 68k per case,
-the dense frontier re-presents the whole candidate pool every step), while
-graph-RLM answers better (+5 pp F1/EM). Honest reading: in a 20-candidate
-distractor pool an LLM controller does not need typed graph state for
-completeness - the graph contributes efficiency and answer precision here.
+the dense frontier re-presents the whole candidate pool every step).
+Graph-RLM scores +5 pp answer F1/EM, but at 10W/9L paired this is not
+significant at n=60. Honest reading: in a 20-candidate distractor pool an
+LLM controller does not need typed graph state for completeness - the
+graph's demonstrated contribution here is token efficiency.
 Exhaustive frontier re-presentation does not exist at open-corpus scale,
 where the frontier must be structural; the distractor setting therefore
 systematically understates the graph's value, and an open-corpus replication
