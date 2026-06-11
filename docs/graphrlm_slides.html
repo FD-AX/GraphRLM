@@ -24,6 +24,12 @@
   .hl { background: #20301f; color: #b6f0c0; font-weight: 600; }
   .warn { color: #ffb38a; }
   .footer { position: fixed; bottom: 2vh; right: 3vw; color: #5a6378; font-size: 0.9em; }
+  @media print {
+    @page { size: 338mm 190mm; margin: 0; }
+    body { overflow: visible; }
+    .slide { display: flex !important; width: 338mm; height: 190mm; padding: 14mm 24mm; page-break-after: always; break-after: page; }
+    .footer { display: none; }
+  }
   .cols { display: flex; gap: 4vw; }
   .cols > div { flex: 1; }
   code { background: #1b2230; padding: 0.1em 0.4em; border-radius: 4px; color: #ffd479; font-size: 0.9em; }
