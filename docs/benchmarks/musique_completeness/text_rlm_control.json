@@ -1,0 +1,17 @@
+{
+  "shared_cases": 60,
+  "text_rlm": {
+    "evidence_recall": 0.9527777777777777,
+    "complete_evidence_coverage": 0.85,
+    "answer_f1": 0.5705555555555555,
+    "exact_match": 0.45,
+    "retrieved_count": 11.4
+  },
+  "graph_rlm": {
+    "evidence_recall": 0.8930555555555555,
+    "complete_evidence_coverage": 0.7333333333333333,
+    "answer_f1": 0.6207513227513227,
+    "exact_match": 0.5,
+    "retrieved_count": 12.25
+  }
+}

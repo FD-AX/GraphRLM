@@ -16,17 +16,21 @@ is activated only when the completeness audit reports a real gap.
 
 ### MuSiQue evidence completeness (500 validation cases, stratified 2/3/4-hop)
 
-**Central finding: among methods with no training on the dataset, graph
-connectivity is the only thing that breaks the evidence-completeness
-plateau.** Every graph-free retrieval family we tested - lexical overlap,
-single-shot dense, exhaustive cross-encoder matching, and MDR-style
-iterative re-querying (including an anchor-weight sweep over its whole
-untrained family) - lands on ~0.21 complete coverage at a five-paragraph
-budget. The same encoder navigating typed graph links reaches 0.30, and the
-gap-driven discovery contour reaches 0.70. For context, the reported
-supervised [Beam Retrieval](https://arxiv.org/abs/2308.08973) result is
-0.774 under its published protocol; that external comparison is directional
-only, because the evaluation protocols are not identical.
+**Central finding: without an LLM controller, graph connectivity is the
+only training-free mechanism that breaks the evidence-completeness
+plateau; with a budget-rich LLM controller in a 20-candidate pool, the
+controller itself breaks the plateau, and typed graph state buys ~1.8x
+token efficiency and better answer precision rather than additional
+completeness.** Every graph-free retrieval family we tested - lexical
+overlap, single-shot dense, exhaustive cross-encoder matching, and
+MDR-style iterative re-querying (including an anchor-weight sweep over its
+whole untrained family) - lands on ~0.21 complete coverage at a
+five-paragraph budget; the same encoder navigating typed graph links
+reaches 0.30 with zero model calls. The gap-driven discovery contour
+reaches 0.70 on the full 500 cases. For context, the reported supervised
+[Beam Retrieval](https://arxiv.org/abs/2308.08973) result is 0.774 under
+its published protocol; that external comparison is directional only,
+because the evaluation protocols are not identical.
 
 **Evaluation target.** Each MuSiQue case contains a question, 20 candidate
 paragraphs, and a gold multi-hop evidence chain. *Evidence recall* is the
@@ -97,6 +101,22 @@ Key paired comparisons (sign tests on shared cases, p << 0.001):
 - graph navigator vs dense: **+8.8 pp** complete coverage;
 - graph-RLM v1 vs graph navigator: **+19.6 pp**;
 - graph-RLM v2 vs v1: **+20.6 pp**.
+
+**Controller frontier ablation (graph state itself).** A budget-matched
+non-graph control (`musique_text_rlm`: same controller, actions, budgets
+and guards; frontier from dense search with typed-link metadata stripped)
+was run on a stratified 60-case subset. It reaches *higher* completeness
+than graph-RLM (0.850 vs 0.733 coverage paired on shared cases, 11L/4W for
+graph, marginal at n=60) at **1.8x the token cost** (121k vs 68k per case,
+the dense frontier re-presents the whole candidate pool every step), while
+graph-RLM answers better (+5 pp F1/EM). Honest reading: in a 20-candidate
+distractor pool an LLM controller does not need typed graph state for
+completeness - the graph contributes efficiency and answer precision here.
+Exhaustive frontier re-presentation does not exist at open-corpus scale,
+where the frontier must be structural; the distractor setting therefore
+systematically understates the graph's value, and an open-corpus replication
+is the next experiment
+([text_rlm_control.json](docs/benchmarks/musique_completeness/text_rlm_control.json)).
 
 All remaining pairwise tests, W/L counts, by-hop matrices and the MDR
 anchor-weight sweep are reported in
