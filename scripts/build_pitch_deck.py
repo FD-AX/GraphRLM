@@ -86,6 +86,7 @@ def style_cell(cell, text, size=14, color=TEXT, bold=False, fill=ROW, align=PP_A
 
 
 def table(s, rows, left, top, width, col_widths, header_fill=ROW, hl_row=None):
+    hl_set = set() if hl_row is None else ({hl_row} if isinstance(hl_row, int) else set(hl_row))
     n_rows, n_cols = len(rows), len(rows[0])
     gt = s.shapes.add_table(n_rows, n_cols, Inches(left), Inches(top), Inches(width), Inches(0.5 * n_rows)).table
     for ci, w in enumerate(col_widths):
@@ -93,7 +94,7 @@ def table(s, rows, left, top, width, col_widths, header_fill=ROW, hl_row=None):
     for ri, row in enumerate(rows):
         for ci, val in enumerate(row):
             is_header = ri == 0
-            is_hl = hl_row is not None and ri == hl_row
+            is_hl = ri in hl_set
             fill = header_fill if is_header else (HL if is_hl else BG)
             color = ACCENT if is_header else (GREEN if is_hl else TEXT)
             align = PP_ALIGN.LEFT if ci == 0 else PP_ALIGN.RIGHT
@@ -175,17 +176,20 @@ notes(s, "~60 сек. Killer-слайд. Одна мысль: наивные п�
 s = slide()
 title(s, "Качество ответов выше публичных LLM — за копейки")
 table(s, [
-    ["Метрика (500 кейсов, zero-shot)", "GraphRLM", "Публичные LLM *"],
+    ["Метрика (500 кейсов, zero-shot, v2)", "GraphRLM", "Публичные LLM *"],
     ["Точность ответа (EM)", "0.52", "~0.37"],
+    ["Полнота ответа (F1)", "0.64", "~0.45"],
     ["Цена за запрос", "$0.025", "—"],
-], left=1.4, top=2.1, width=10.5, col_widths=[6.0, 2.25, 2.25], hl_row=1)
-tf = textbox(s, 0.9, 4.6, 11.5, 2.2)
-para(tf, "Точность ответа в 1.4 раза выше публичных LLM-бейзлайнов — на дешёвой модели.", 19, TEXT, first=True, bullet=True, space_after=10)
+], left=1.4, top=2.1, width=10.5, col_widths=[6.0, 2.25, 2.25], hl_row=[1, 2])
+tf = textbox(s, 0.9, 4.9, 11.5, 2.2)
+para(tf, "Точность и полнота ответа в ~1.4 раза выше публичных LLM-бейзлайнов — на дешёвой модели.", 19, TEXT, first=True, bullet=True, space_after=10)
 para(tf, "Дорогой цикл — только по триггеру: на масштабе платишь не за каждый запрос.", 19, TEXT, bullet=True, space_after=10)
 para(tf, "* литературные данные (напр. Gemini на MuSiQue); directional.", 13, MUTED)
-notes(s, "~45 сек. Связка качество+цена. Цифры с полных 500 кейсов — надёжные. "
-         "Не уходи в F1 против text-RLM (незначимо, n=60). Здесь — только "
-         "абсолютные числа против внешних бейзлайнов.")
+notes(s, "~45 сек. Связка качество+цена. Цифры v2 на полных 500 кейсах (EM 0.522, "
+         "F1 0.639) — надёжные сами по себе. ОСТОРОЖНО: сравнение с публичными LLM — "
+         "directional (разные протоколы оценки MuSiQue), держи звёздочку и НЕ делай "
+         "'в 1.4 раза точнее Gemini' главным лозунгом — грамотный человек спросит про "
+         "идентичность сеттинга. Не уходи в F1 против text-RLM (незначимо, n=60).")
 
 # ---------------------------------------------------------------- Slide 6
 s = slide()
